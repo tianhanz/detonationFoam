@@ -28,6 +28,10 @@ detonationFoam_V2.0
    cd detonationFoam_V2.0
    ./Allwmake
    ```
+## Applications
+Since detonationFoam solver released on Github, it has been successfully applied in simulation of detonation, scramjet, reactive boundary layer. Here are some typical examples.
+![image](https://github.com/user-attachments/assets/ad47ad92-0bc0-47e9-ba89-baad03fc08a0)
+
 
 ## Getting help and reporting bugs
 Please submit a GitHub issue if you found a bug in the program. If you need help with the software or have further questions, contact sunjie_coe@pku.edu.cn and cz@pku.edu.cn.
