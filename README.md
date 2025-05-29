@@ -6,7 +6,7 @@ The author will gradually upload example cases and improve the corresponding doc
 
 ## Directory structure
 detonationFoam_V2.0
-
+   ```
    solverTypeEuler (Solve Euler equations)
    
    solverTypeNS_Sutherland (Solve N-S equations; transport parameters are calculated according to Sutherland model)
@@ -20,7 +20,7 @@ detonationFoam_V2.0
    dynamicMesh2D (2D adaptive mesh refinement library. Optional)
    
    ROUNDSchemes (Low-dissipation reconstruction scheme. Optional)
-   
+   ```
 ## Compiling 
 
 
