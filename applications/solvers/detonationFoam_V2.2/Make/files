@@ -1,3 +1,0 @@
-detonationFoam_V2.2.C
-
-EXE = $(FOAM_USER_APPBIN)/detonationFoam_V2.2
