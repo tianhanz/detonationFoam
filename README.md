@@ -35,6 +35,7 @@ Since detonationFoam solver released on Github, it has been successfully applied
 <img src="https://github.com/user-attachments/assets/939372de-4903-41bd-9e39-48117f447502" width="800"/>
 
 ### Oblique detonation wave
+<img src="https://github.com/user-attachments/assets/2d7d6650-9828-4691-ae96-471ef0d2bd2b" width="800"/>
 
 ### Rotating detonation wave 
 Figures are provided by Mr. Jiehui Hu (PhD Candidate) from Shanghai Jiao Tong University
