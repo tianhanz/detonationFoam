@@ -29,6 +29,9 @@ detonationFoam_V2.0
    cd detonationFoam_V2.0
    ./Allwmake
    ```
+
+Note: If you want to use the mixture-averaged transport model in detonationFoam, you will need additional files that define the transport properties of each species. Please refer to https://github.com/ZSHtju/reactingDNS_OpenFOAM for guidance on how to generate these files.
+
 ## Applications
 Since detonationFoam solver released on Github, it has been successfully applied in simulation of detonation, scramjet, reactive boundary layer. Here are some typical examples.
 
