@@ -35,7 +35,7 @@ Since detonationFoam solver released on Github, it has been successfully applied
 <img src="https://github.com/user-attachments/assets/ad47ad92-0bc0-47e9-ba89-baad03fc08a0" width="600"/>
 
 ### Cellular detonation; Detonation diffraction
-<img src="https://github.com/user-attachments/assets/92718923-0eb8-45bb-84ed-99c029012046" width="300"/>
+<img src="https://github.com/user-attachments/assets/8a0f3add-1bdc-4a7e-bab5-a8ee5859ccb1" width="600"/>
 
 ### Detonation initiation [***]
 <img src="https://github.com/user-attachments/assets/80dbdd81-5235-41cc-903b-6966e6d70cbb" width="600"/>
