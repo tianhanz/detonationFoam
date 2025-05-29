@@ -31,15 +31,8 @@ detonationFoam_V2.0
 ## Applications
 Since detonationFoam solver released on Github, it has been successfully applied in simulation of detonation, scramjet, reactive boundary layer. Here are some typical examples.
 
-### Detonation reflection [***]
-<img src="https://github.com/user-attachments/assets/ad47ad92-0bc0-47e9-ba89-baad03fc08a0" width="600"/>
-
-### Cellular detonation; Detonation diffraction
-<img src="https://github.com/user-attachments/assets/8a0f3add-1bdc-4a7e-bab5-a8ee5859ccb1" width="600"/>
-
-### Detonation initiation [***]
-<img src="https://github.com/user-attachments/assets/80dbdd81-5235-41cc-903b-6966e6d70cbb" width="600"/>
-
+### Cellular detonation; Detonation diffraction; Detonation initiation
+<img src="https://github.com/user-attachments/assets/4c108588-557f-4889-92ba-9e2cb25341a2" width="800"/>
 
 ## Getting help and reporting bugs
 Please submit a GitHub issue if you found a bug in the program. If you need help with the software or have further questions, contact sunjie_coe@pku.edu.cn and cz@pku.edu.cn.
