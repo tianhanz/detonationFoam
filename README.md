@@ -11,15 +11,14 @@ The author will gradually upload example cases and improve the corresponding doc
 
 ## Directory structure
 detonationFoam_V2.0
-   ```
-   solverTypeEuler (Solve Euler equations)
-   solverTypeNS_Sutherland (Solve N-S equations; transport parameters are calculated according to Sutherland model)
-   solverTypeNS_mixtureAverage (Solve N-S equations; transport parameters are calculated according to mixture-averaged model)
-   fluxSchemes_improved (Improved convective flux computation library)
-   DLBFoam-1.0-1.0_OF8 (Dynamic load balance library: https://github.com/blttkgl/DLBFoam-1.0/tree/v1.0_OF8. Optional)
-   dynamicMesh2D (2D adaptive mesh refinement library. Optional)
+   solverTypeEuler (Solve Euler equations)  
+   solverTypeNS_Sutherland (Solve N-S equations; transport parameters are calculated according to Sutherland model)  
+   solverTypeNS_mixtureAverage (Solve N-S equations; transport parameters are calculated according to mixture-averaged model)  
+   fluxSchemes_improved (Improved convective flux computation library)  
+   DLBFoam-1.0-1.0_OF8 (Dynamic load balance library: https://github.com/blttkgl/DLBFoam-1.0/tree/v1.0_OF8. Optional)  
+   dynamicMesh2D (2D adaptive mesh refinement library. Optional)  
    ROUNDSchemes (Low-dissipation reconstruction scheme. Optional)
-   ```
+   
 ## Compiling 
 1. Install OpenFOAM version 8
 
