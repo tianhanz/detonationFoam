@@ -22,7 +22,10 @@ detonationFoam_V2.0
    ROUNDSchemes (Low-dissipation reconstruction scheme. Optional)
    ```
 ## Compiling 
-
+   ```
+   cd detonationFoam_V2.0
+   ./Allwmake
+   ```
 
 ## Getting help and reporting bugs
 Please submit a GitHub issue if you found a bug in the program. If you need help with the software or have further questions, contact sunjie_coe@pku.edu.cn and cz@pku.edu.cn.
