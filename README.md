@@ -1,5 +1,5 @@
 detonationFoam_V2.0 based on OpenFOAM version 8 is released.
-The author will gradually upload example cases and improve the corresponding documentation.
+The author will gradually upload example cases and improve the corresponding documentation before the end of June 2025.
 
 
 # detonationFoam: An open-source solver for simulation of gaseous detonation based on OpenFOAM
