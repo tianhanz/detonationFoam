@@ -1,7 +1,7 @@
 detonationFoam_V2.0 based on OpenFOAM version 8 is released.
 The author will gradually upload example cases and improve the corresponding documentation before the end of June 2025.
 ## What's new?
-1. Optimized the code structure (A new dictionary file named ‘lverTypeProperties’ has been added under the constant directory of the case folder to select the solver type, replacing the approach in version 1.0 where three separate solvers were compiled.).
+1. Optimized the code structure (A new dictionary file named ‘solverTypeProperties’ has been added under the constant directory of the case folder to select the solver type, replacing the approach in version 1.0 where three separate solvers were compiled.).
 
 3. Fixed an initialization error in the turbulence model.
 
