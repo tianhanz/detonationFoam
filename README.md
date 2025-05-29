@@ -5,7 +5,7 @@ The author will gradually upload example cases and improve the corresponding doc
 
 3. Fixed an initialization error in the turbulence model.
 
-4. Modified the selection strategy for reconstructed variable members in convective flux computation (showing improved performance in supersonic combustion simulations).
+4. Modified the selection strategy for reconstructed variable members in convective flux computation (showing improved performance in supersonic combustion ramjet simulations).
 
 # detonationFoam: An open-source solver for simulation of gaseous detonation based on OpenFOAM
 
