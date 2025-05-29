@@ -32,11 +32,13 @@ detonationFoam_V2.0
 Since detonationFoam solver released on Github, it has been successfully applied in simulation of detonation, scramjet, reactive boundary layer. Here are some typical examples.
 
 ### Cellular detonation; Detonation diffraction; Detonation initiation
-<img src="https://github.com/user-attachments/assets/4c108588-557f-4889-92ba-9e2cb25341a2" width="800"/>
+<img src="https://github.com/user-attachments/assets/939372de-4903-41bd-9e39-48117f447502" width="800"/>
 
 ### Oblique detonation wave
 
-### rotating detonation wave [Figures are provided by Mr. Jiehui Hu (PhD Candidate) from Shanghai Jiao Tong University]
+### Rotating detonation wave 
+Figures are provided by Mr. Jiehui Hu (PhD Candidate) from Shanghai Jiao Tong University
+
 <img src="https://github.com/user-attachments/assets/f3b67ade-9abe-4dff-ac4c-36bcef51530a" width="800"/>
 
 ## Getting help and reporting bugs
