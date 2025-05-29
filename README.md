@@ -43,9 +43,7 @@ Figures are provided by Mr. Jiehui Hu (PhD candidate) from Shanghai Jiao Tong Un
 <img src="https://github.com/user-attachments/assets/f3b67ade-9abe-4dff-ac4c-36bcef51530a" width="800"/>
 
 ### Scramjet; Turbulent boundary layer
-The simulation of the scramjet was completed in collaboration with Mr. Menglei Li (PhD candidate) from the National University of Defense Technology.
-
-The simulation of the turbulent boundary layer was completed with the assistance of Mr. Xin Li (PhD candidate) from National University of Defense Technology.
+The simulation of the scramjet was completed in collaboration with Mr. Menglei Li (PhD candidate) from the National University of Defense Technology. The simulation of the turbulent boundary layer was completed with the assistance of Mr. Xin Li (PhD candidate) from National University of Defense Technology.
 <img src="https://github.com/user-attachments/assets/3bdcacef-f1d8-4e25-bff4-1186cab31ef0" width="800"/>
 
 ## Getting help and reporting bugs
