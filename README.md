@@ -30,7 +30,8 @@ detonationFoam_V2.0
    ```
 ## Applications
 Since detonationFoam solver released on Github, it has been successfully applied in simulation of detonation, scramjet, reactive boundary layer. Here are some typical examples.
-<img src="https://github.com/user-attachments/assets/ad47ad92-0bc0-47e9-ba89-baad03fc08a0" width="300"/>
+
+<img src="https://github.com/user-attachments/assets/ad47ad92-0bc0-47e9-ba89-baad03fc08a0" width="400"/>
 
 
 ## Getting help and reporting bugs
