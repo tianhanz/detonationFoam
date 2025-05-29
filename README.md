@@ -1,4 +1,4 @@
-detonationFoam_V2.0 based on OpenFOAM version 8 is released.
+# detonationFoam_V2.0 (based on OpenFOAM version 8): An open-source solver for simulation of gaseous detonation based on OpenFOAM
 The author will gradually upload example cases and improve the corresponding documentation before the end of June 2025.
 ## What's new?
 1. Optimized the code structure (A new dictionary file named ‘solverTypeProperties’ has been added under the constant directory of the case folder to select the solver type, replacing the approach in version 1.0 where three separate solvers were compiled).
@@ -6,8 +6,6 @@ The author will gradually upload example cases and improve the corresponding doc
 3. Fixed an initialization error in the turbulence model.
 
 4. Modified the selection strategy for reconstructed variable members in convective flux computation (showing improved performance in supersonic combustion ramjet simulations).
-
-# detonationFoam: An open-source solver for simulation of gaseous detonation based on OpenFOAM
 
 ## Directory structure
 detonationFoam_V2.0
