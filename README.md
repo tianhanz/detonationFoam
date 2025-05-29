@@ -55,7 +55,7 @@ If you use the code for your works and researches, please cite:
    ```
    J. Sun, Y. Wang, B. Tian, Z. Chen, detonationFoam: An open-source solver for simulation of gaseous detonation based on OpenFOAM, Computer Physics Communications 292 (2023) 108859.
    ```
-##  Publications Using detonationFoam Solver
+##  Journal Publications Using detonationFoam Solver
 [1] J. Sun, D. Yu, P. Yang, Y. Wang, S. Wang, Z. Chen, Detonation initiation induced by dual hot spots: a computational study, Journal of Fluid Mechanics 1010 (2025) A60.  
 [2] J. Sun, P. Yang, Z. Chen, Dynamic interaction patterns of oblique detonation waves with boundary layers in hypersonic reactive flows, Combustion and Flame 271 (2025) 113832.  
 [3] Z. Yang, B. Zhang, H.D. Ng, Experimental observations of gaseous cellular detonation reflection, Proceedings of the Combustion Institute 40 (2024) 105519.  
