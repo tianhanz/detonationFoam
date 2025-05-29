@@ -34,6 +34,11 @@ Since detonationFoam solver released on Github, it has been successfully applied
 ### Cellular detonation; Detonation diffraction; Detonation initiation
 <img src="https://github.com/user-attachments/assets/4c108588-557f-4889-92ba-9e2cb25341a2" width="800"/>
 
+### Oblique detonation wave
+
+### rotating detonation wave [Figures are provided by Mr. Jiehui Hu (PhD Candidate) from Shanghai Jiao Tong University]
+<img src="https://github.com/user-attachments/assets/f3b67ade-9abe-4dff-ac4c-36bcef51530a" width="800"/>
+
 ## Getting help and reporting bugs
 Please submit a GitHub issue if you found a bug in the program. If you need help with the software or have further questions, contact sunjie_coe@pku.edu.cn and cz@pku.edu.cn.
 
