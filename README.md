@@ -38,9 +38,14 @@ Since detonationFoam solver released on Github, it has been successfully applied
 <img src="https://github.com/user-attachments/assets/2d7d6650-9828-4691-ae96-471ef0d2bd2b" width="800"/>
 
 ### Rotating detonation wave 
-Figures are provided by Mr. Jiehui Hu (PhD Candidate) from Shanghai Jiao Tong University
+Figures are provided by Mr. Jiehui Hu (PhD candidate) from Shanghai Jiao Tong University.
 
 <img src="https://github.com/user-attachments/assets/f3b67ade-9abe-4dff-ac4c-36bcef51530a" width="800"/>
+
+### Scramjet; Turbulent boundary layer
+The simulation of the scramjet was completed in collaboration with Mr. Menglei Li (PhD candidate) from the National University of Defense Technology.
+The simulation of the turbulent boundary layer was completed with the assistance of Mr. Xin Li (PhD candidate) from National University of Defense Technology.
+<img src="https://github.com/user-attachments/assets/3bdcacef-f1d8-4e25-bff4-1186cab31ef0" width="800"/>
 
 ## Getting help and reporting bugs
 Please submit a GitHub issue if you found a bug in the program. If you need help with the software or have further questions, contact sunjie_coe@pku.edu.cn and cz@pku.edu.cn.
