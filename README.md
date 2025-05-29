@@ -16,6 +16,9 @@ detonationFoam_V2.0
    ROUNDSchemes (Low-dissipation reconstruction scheme. Optional)
    ```
 ## Compiling 
+1. Install OpenFOAM version 8
+
+2. Compile detonationFoam_V2.0
    ```
    cd detonationFoam_V2.0
    ./Allwmake
