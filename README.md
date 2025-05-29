@@ -5,7 +5,7 @@ The author will gradually upload example cases and improve the corresponding doc
 # detonationFoam: An open-source solver for simulation of gaseous detonation based on OpenFOAM
 
 ## Directory structure
-
+detonationFoam_V2.0
 
 ## Compiling 
 
