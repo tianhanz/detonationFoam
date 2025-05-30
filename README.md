@@ -17,7 +17,7 @@ detonationFoam_V2.0
    fluxSchemes_improved (Improved convective flux computation library)  
    DLBFoam-1.0-1.0_OF8 (Dynamic load balance library: https://github.com/blttkgl/DLBFoam-1.0/tree/v1.0_OF8. Optional)  
    dynamicMesh2D (2D adaptive mesh refinement library. Optional)  
-   ROUNDSchemes (Low-dissipation reconstruction scheme. Optional)
+   ROUNDSchemes (Low-dissipation reconstruction scheme. https://github.com/ROUNDschemes/libROUNDSchemes. Optional)
    ```
    
 ## Compiling 
