@@ -1,4 +1,4 @@
-#The latest version of the program exhibits pronounced numerical oscillations during the diffusion process. We are currently working on fixing this issue.
+# The latest version of the program exhibits pronounced numerical oscillations during the diffusion process. We are currently working on fixing this issue.
 
 
 # detonationFoam_V2.0 (based on OpenFOAM 8): An open-source solver for simulation of gaseous detonation based on OpenFOAM
