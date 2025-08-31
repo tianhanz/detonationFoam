@@ -63,7 +63,8 @@ If you use the code for your works and researches, please cite:
    J. Sun, Y. Wang, B. Tian, Z. Chen, detonationFoam: An open-source solver for simulation of gaseous detonation based on OpenFOAM, Computer Physics Communications 292 (2023) 108859.
    ```
 ##  Journal Publications Using detonationFoam Solver
-[14] J. Sun, Y. Wang, S.M. Shaik, H. Zhang, Numerical investigation of detonation initiation and propagation in non-uniformly cracked ammonia and air mixtures, Combustion and Flame, 281 (2025) 114439.  
+[15] J. Hu, B. Zhang, Propulsion performance and detonation wave dynamics in a rotating detonation combustor: Effects of nonideal inflow conditions, Aerospace Science and Technology (2025) 110857.
+[14] J. Sun, Y. Wang, S.M. Shaik, H. Zhang, Numerical investigation of detonation initiation and propagation in non-uniformly cracked ammonia and air mixtures, Combustion and Flame 281 (2025) 114439.  
 [13] Y. Liu, H. Wang, R. Mével, K. Luo, J. Fan, Numerical study of wedge-induced oblique detonation waves in homogeneous and inhomogeneous n-dodecane/air mixtures, Physics of Fluids 37 (2025) 066118.  
 [12] Z. Yang, B. Zhang, Typical onset modes of DDT and behavior of strong transverse shocks, Chinese Journal of Aeronautics, (2025) 103602.  
 [11] J. Sun, D. Yu, P. Yang, Y. Wang, S. Wang, Z. Chen, Detonation initiation induced by dual hot spots: a computational study, Journal of Fluid Mechanics 1010 (2025) A60.  
