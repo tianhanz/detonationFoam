@@ -63,8 +63,8 @@ If you use the code for your works and researches, please cite:
    J. Sun, Y. Wang, B. Tian, Z. Chen, detonationFoam: An open-source solver for simulation of gaseous detonation based on OpenFOAM, Computer Physics Communications 292 (2023) 108859.
    ```
 ##  Journal Publications Using detonationFoam Solver
-[17] J. Sun, S.M. Shaik, V.B. Nguyen, H. Zhang, Detonation chemistry and propagation characteristics in partially cracked ammonia, Proceedings of the Combustion Institute (2025) in press.  
-[16] J. Sun, Z. Chen, Bifurcation of cellular detonation structure in a mixture with two-stage reactions, Journal of Fluid Mechanics (2025) in press.  
+[17] J. Sun, Z. Chen, Bifurcation of cellular detonation structure in a mixture with two-stage reactions, Journal of Fluid Mechanics (2025) in press.  
+[16] J. Sun, S.M. Shaik, V.B. Nguyen, H. Zhang, Detonation chemistry and propagation characteristics in partially cracked ammonia, Proceedings of the Combustion Institute 41 (2025) 105910.  
 [15] J. Hu, B. Zhang, Propulsion performance and detonation wave dynamics in a rotating detonation combustor: Effects of nonideal inflow conditions, Aerospace Science and Technology 168 (2025) 110857.  
 [14] J. Sun, Y. Wang, S.M. Shaik, H. Zhang, Numerical investigation of detonation initiation and propagation in non-uniformly cracked ammonia and air mixtures, Combustion and Flame 281 (2025) 114439.  
 [13] Y. Liu, H. Wang, R. Mével, K. Luo, J. Fan, Numerical study of wedge-induced oblique detonation waves in homogeneous and inhomogeneous n-dodecane/air mixtures, Physics of Fluids 37 (2025) 066118.  
