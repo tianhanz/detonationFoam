@@ -47,7 +47,7 @@ Since detonationFoam solver released on Github, it has been successfully applied
 Figures are provided by Mr. Jiehui Hu (PhD candidate) from Shanghai Jiao Tong University.
 
 <img src="https://github.com/user-attachments/assets/f3b67ade-9abe-4dff-ac4c-36bcef51530a" width="800"/>
-![Uploading bafcffbd3539507a711d90bec1cd0e11_raw~1.gif…]()
+![bafcffbd3539507a711d90bec1cd0e11_raw~1](https://github.com/user-attachments/assets/8c984cc8-4288-4219-ac20-14e4f071cae8)
 
 
 
