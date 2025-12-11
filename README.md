@@ -47,6 +47,9 @@ Since detonationFoam solver released on Github, it has been successfully applied
 Figures are provided by Mr. Jiehui Hu (PhD candidate) from Shanghai Jiao Tong University.
 
 <img src="https://github.com/user-attachments/assets/f3b67ade-9abe-4dff-ac4c-36bcef51530a" width="800"/>
+![Uploading bafcffbd3539507a711d90bec1cd0e11_raw~1.gif…]()
+
+
 
 ### Scramjet; Turbulent boundary layer
 The simulation of the scramjet was completed in collaboration with Mr. Menglei Li (PhD candidate) from the National University of Defense Technology.  
