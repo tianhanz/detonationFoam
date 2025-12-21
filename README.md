@@ -63,6 +63,7 @@ If you use the code for your works and researches, please cite:
    J. Sun, Y. Wang, B. Tian, Z. Chen, detonationFoam: An open-source solver for simulation of gaseous detonation based on OpenFOAM, Computer Physics Communications 292 (2023) 108859.
    ```
 ##  Journal Publications Using detonationFoam Solver
+[20] A. Dahake, A.S. Karthik, R.K. Singh, A.V. Singh, Investigating the effect of ozonolysis on the structure and dynamics of ethylene–oxygen–ozone detonations, Combustion and Flame 285 (2026) 114716.  
 [19] X. Yuan, T. Jin, Dynamic response of the unstable oblique detonation wave in confined space via different wedge rotation, Aerospace Science and Technology in press.  
 [18] M. Li, B. An, P. Li, M. Sun, T. Wang, J. Sun, Y. Wang, H. Zhang, Ignition dynamics of a supersonic combustor with parallel dual combustion zones, AIAA Journal in press.  
 [17] J. Sun, Z. Chen, Bifurcation of cellular detonation structure in a mixture with two-stage reactions, Journal of Fluid Mechanics 1022 (2025) A14.  
