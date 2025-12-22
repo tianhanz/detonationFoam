@@ -182,6 +182,33 @@ volScalarField Qdot
     dimensionedScalar("Qdot", dimEnergy/dimVolume/dimTime, 0.0)
 );
 
+//RDE
+volScalarField gamma
+(
+    IOobject
+    (
+	"gama",
+	runTime.timeName(),
+	mesh,
+	IOobject::NO_READ,
+	IOobject::NO_WRITE
+    ),
+    thermo.gamma()
+);
+volScalarField R_gas
+(
+    IOobject
+    (
+	"R_gas",
+	runTime.timeName(),
+	mesh,
+	IOobject::NO_READ,
+	IOobject::NO_WRITE
+    ),
+    thermo.Cp()-thermo.Cv()
+);
+//RDE
+
 Info << "Reading solverTypeProperties\n" << endl;
 IOdictionary solverTypeProperties
 (
