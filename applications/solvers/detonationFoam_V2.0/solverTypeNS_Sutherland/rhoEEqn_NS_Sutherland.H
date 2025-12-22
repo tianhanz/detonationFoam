@@ -29,6 +29,12 @@ solve
   + thermophysicalTransport->divq(e)
 );
 thermo.correct();
+
+//RDE
+gamma=thermo.gamma();
+R_gas=thermo.Cp()-thermo.Cv();
+//RDE
+
 rhoE = rho*(e + 0.5*magSqr(U));
 
 p.ref() = rho()/psi();
