@@ -62,6 +62,7 @@ If you use the code for your works and researches, please cite:
 ##  Journal Publications Using detonationFoam Solver
 
 ### 2026
+[23] D. Cao, Z. Yang, B. Zhang, C. Wen, Detonation diffraction in expansion channels with rounded corner, Combustion and Flame, 283 (2026) 114554.    
 [22] J. Cheng, B. Zhang, C. Wen, Dynamics of detonation propagation in a wedged variable-section channel, Combustion and Flame, 284 (2026) 114634.    
 [21] Y. Li, P. Chen, X. Meng, J Su, X Li, H. Yan, Unreacted pocket closure and jet flame formation in H2/O2 detonations with transverse concentration gradients, Acta Astronautica 240 (2026) 840-853.  
 [20] A. Dahake, A.S. Karthik, R.K. Singh, A.V. Singh, Investigating the effect of ozonolysis on the structure and dynamics of ethylene–oxygen–ozone detonations, Combustion and Flame 285 (2026) 114716.  
