@@ -64,6 +64,7 @@ If you use the code for your works and researches, please cite:
 ##  Journal Publications Using detonationFoam Solver
 
 ### 2026
+[26] X. Yuan, T. Jin, Numerical study on the influence of jet on the stability of oblique detonation waves in confined space, Propulsion and Energy 2 (2026) 2.  
 [25] Y. Wang, C. Zheng, H. Zhang, Z. Chen, Propagation characteristics of H2–air detonations in double-bend ducts, Frontiers in Mechanical Engineering 12 (2026) DOI: 10.3389/fmech.2026.1761460.  
 [24] C. Euteneuer, S. Ramachandran, S. Yang, Three-dimensional structures of H2/air oblique detonation waves,  AIAA SCITECH 2026 ForumAt: Orlando, FL.  
 [23] D. Cao, Z. Yang, B. Zhang, C. Wen, Detonation diffraction in expansion channels with rounded corner, Combustion and Flame, 283 (2026) 114554.    
