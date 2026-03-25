@@ -45,6 +45,8 @@ Since detonationFoam solver released on Github, it has been successfully applied
 ### Rotating detonation wave
 <img src="https://github.com/user-attachments/assets/8c984cc8-4288-4219-ac20-14e4f071cae8" width="800"/>
 
+### Deflagration to detonation transition (DDT)
+<img src="https://github.com/user-attachments/assets/dbde8036-88c2-42df-a5c4-d567937da749" width="800"/>
 
 
 ### Scramjet; Turbulent boundary layer
