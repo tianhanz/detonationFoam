@@ -24,3 +24,11 @@ Create learning materials and reference documentation for the detonationFoam cod
 - **DLBFoam port** (7 files): `StandardChemistryModel<ReactionThermo,ThermoType>` → `standardChemistryModel<ThermoType>`, `BasicChemistryModel<ReactionThermo>::correct()` → `basicChemistryModel::correct()`, `thermo.db()` → `thermo.T().mesh()` / `this->mesh()`, macro instantiation rewrite (`forCommonGases` → `forCoeffGases`, drop `forPolynomials`, drop ReactionThermo arg), added `OSspecific.H` for `mkDir`
 - **Tested**: Tutorial case (1D NH3/O2 detonation) runs, shock propagates at 0.01m after 16 timesteps, p/T ranges correct
 - **Warning**: `libODE_DLB.so` not built (DLBFoam ODE lib not in Allwmake) — benign, not needed for standard `ode` solver
+
+### EARS — Progress (2026-03-27 23:01)
+- **Completed**: Post-simulation visualization and verification report
+- **New files**: `docs/verification-report.md` (comprehensive markdown report with 6 embedded figures), `docs/figures/` (6 PNG diagnostic plots)
+- **Simulation insight**: Tutorial case initial conditions have TWO fronts — thermodynamic discontinuity at x=5mm (from setFields: 9.12 MPa driver) and species front at x=10mm (from 0/ directory: N₂→NH₃/O₂ transition). The velocity ramp (0→1700 m/s) represents a pre-developed blast expansion fan.
+- **Key discovery**: Chemistry is extremely stiff — 33 species / 251 reactions with seulex ODE solver. Single-core throughput is ~1 ns per 5 min wall time. Full detonation development (1–10 μs) requires MPI parallel execution.
+- **Verification checks passed**: Shock captured in 2–3 cells, no oscillations; EOS consistency (p/ρT = R_mix in all regions); species conservation; stable CFL-adaptive timestepping
+- **Limitation**: 8 ns simulated — too short for chemistry to activate (NH₃/O₂ induction time ~ μs). Radicals and heat release are negligible. Need longer runs for ZND structure verification.
