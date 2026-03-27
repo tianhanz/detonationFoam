@@ -1,0 +1,40 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  9
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      setFieldsDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// 1D H2/O2 CJ detonation
+// Stoichiometric H2/O2 in N2 diluent (2H2 + O2 + 3.76 N2)
+// Initial: 1 atm, 300 K
+// Hot spot: 30 atm, 2500 K at left boundary (0 to 5 mm)
+
+defaultFieldValues
+(
+    volScalarFieldValue p 101325
+    volScalarFieldValue T 300
+);
+
+regions
+(
+    boxToCell
+    {
+        box     (-1 -1 -1) (0.005 1 1);
+        fieldValues
+        (
+            volScalarFieldValue p 3039750
+            volScalarFieldValue T 2500
+        );
+    }
+);
+
+// ************************************************************************* //

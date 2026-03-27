@@ -1,0 +1,2 @@
+solverType  Euler;   //Euler; NS_Sutherland; NS_mixtureAverage
+SW_position_limit   0.09999;
