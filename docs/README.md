@@ -18,6 +18,7 @@ Learning materials and reference guides for the detonationFoam solver.
 | [config-reference.md](config-reference.md) | Every input file parameter explained | Setting up or modifying a case |
 | [simulation-cookbook.md](simulation-cookbook.md) | Step-by-step workflows for common tasks | Running simulations in practice |
 | [troubleshooting.md](troubleshooting.md) | Common errors, diagnosis, fixes | When simulations crash or misbehave |
+| [verification-report.md](verification-report.md) | OF9 port verification with diagnostic plots | Reviewing simulation correctness |
 
 ## 3 Solver Types
 
