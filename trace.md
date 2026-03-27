@@ -32,3 +32,11 @@ Create learning materials and reference documentation for the detonationFoam cod
 - **Key discovery**: Chemistry is extremely stiff — 33 species / 251 reactions with seulex ODE solver. Single-core throughput is ~1 ns per 5 min wall time. Full detonation development (1–10 μs) requires MPI parallel execution.
 - **Verification checks passed**: Shock captured in 2–3 cells, no oscillations; EOS consistency (p/ρT = R_mix in all regions); species conservation; stable CFL-adaptive timestepping
 - **Limitation**: 8 ns simulated — too short for chemistry to activate (NH₃/O₂ induction time ~ μs). Radicals and heat release are negligible. Need longer runs for ZND structure verification.
+
+### EARS — Progress (2026-03-28 07:33)
+- **Task**: Adapt ~/asurf Bohrium infrastructure for detonationFoam; design production detonation cases
+- **Bohrium setup**: ACCESS_KEY and PROJECT_ID already configured in env. `bohr` CLI at ~/.bohrium/bohr. No pre-built OpenFOAM image on Bohrium (platform focuses on MD/DFT), but Docker Hub public images work: `microfluidica/openfoam:9` (420 MB, actively maintained) recommended as base.
+- **Created**: `bohrium/submit_detonation.py` — adapted from asurf's batch_submit.py for OpenFOAM MPI jobs. Handles case staging, decomposeParDict patching, solver compilation on Bohrium, and result reconstruction.
+- **Created**: `bohrium/chemkin2foam.py` — Chemkin-II → OpenFOAM .foam format converter. Needed because asurf mechanisms are Chemkin/YAML format but detonationFoam requires .foam dictionaries.
+- **Decision**: Use Burke 2011 H2/O2 mechanism (10 species, 27 reactions) for production cases instead of extracting H2/O2 subset from NH3 mechanism. Burke 2011 is the gold standard for H2/O2 kinetics, well-validated for detonation.
+- **Next**: Generate .foam mechanism files, create 1D H2/O2 CJ detonation and 2D cellular detonation case templates, test Bohrium submission.

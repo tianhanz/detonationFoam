@@ -1,0 +1,100 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  9
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// 2D H2/O2 cellular detonation
+// Domain: 0.1 m x 0.02 m (10 cm x 2 cm)
+// Grid: 5000 x 1000 = 5M cells, dx = dy = 20 um
+// H2/O2 cell size ~ 5-15 mm at 1 atm → ~250-750 cells per cell width
+// Periodic in y for transverse wave development
+
+convertToMeters 1;
+
+vertices
+(
+    (0.0   0.0   -0.001)
+    (0.1   0.0   -0.001)
+    (0.1   0.02  -0.001)
+    (0.0   0.02  -0.001)
+    (0.0   0.0    0.001)
+    (0.1   0.0    0.001)
+    (0.1   0.02   0.001)
+    (0.0   0.02   0.001)
+);
+
+blocks
+(
+    hex (0 1 2 3 4 5 6 7) (5000 1000 1) simpleGrading (1 1 1)
+);
+
+edges
+(
+);
+
+boundary
+(
+    inlet
+    {
+        type wall;
+        faces
+        (
+            (0 4 7 3)
+        );
+    }
+
+    outlet
+    {
+        type wall;
+        faces
+        (
+            (1 2 6 5)
+        );
+    }
+
+    top
+    {
+        type cyclic;
+        neighbourPatch bottom;
+        faces
+        (
+            (3 7 6 2)
+        );
+    }
+
+    bottom
+    {
+        type cyclic;
+        neighbourPatch top;
+        faces
+        (
+            (0 1 5 4)
+        );
+    }
+
+    frontAndBack
+    {
+        type empty;
+        faces
+        (
+            (4 5 6 7)
+            (0 3 2 1)
+        );
+    }
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //
