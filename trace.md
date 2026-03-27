@@ -17,3 +17,11 @@ Create learning materials and reference documentation for the detonationFoam cod
 3. Tested compilation on available OpenFOAM 9 (partial compatibility documented)
 4. Tested blockMesh + setFields on tutorial case (works on OF9)
 5. Organized knowledge into progressive learning path + practical reference docs
+
+### EARS — Progress (2026-03-27 17:24)
+- **Completed**: Learning docs created in `docs/`, pushed to `tianhanz/detonationFoam` branch `vk/8b8c-learn-code`
+- **Git setup**: origin → tianhanz fork (SSH), upstream → JieSun-pku original. SSH key configured.
+- **Key discovery**: OF8 not available in apt (removed from openfoam.org repo). OF9 installed but has breaking API changes.
+- **Decision**: Port detonationFoam to OF9 instead of trying to install OF8. User confirmed DLBFoam must be included.
+- **Current task**: Planning OF8→OF9 port. Research complete — identified all header renames, library changes, and the `StandardChemistryModel` de-templating needed for DLBFoam.
+- **Risk**: DLBFoam port is non-trivial (chemistry model went from 2 template params to 1 in OF9). Main solver port is straightforward (~6 line changes + Make/options).
