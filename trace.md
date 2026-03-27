@@ -18,10 +18,9 @@ Create learning materials and reference documentation for the detonationFoam cod
 4. Tested blockMesh + setFields on tutorial case (works on OF9)
 5. Organized knowledge into progressive learning path + practical reference docs
 
-### EARS — Progress (2026-03-27 17:24)
-- **Completed**: Learning docs created in `docs/`, pushed to `tianhanz/detonationFoam` branch `vk/8b8c-learn-code`
-- **Git setup**: origin → tianhanz fork (SSH), upstream → JieSun-pku original. SSH key configured.
-- **Key discovery**: OF8 not available in apt (removed from openfoam.org repo). OF9 installed but has breaking API changes.
-- **Decision**: Port detonationFoam to OF9 instead of trying to install OF8. User confirmed DLBFoam must be included.
-- **Current task**: Planning OF8→OF9 port. Research complete — identified all header renames, library changes, and the `StandardChemistryModel` de-templating needed for DLBFoam.
-- **Risk**: DLBFoam port is non-trivial (chemistry model went from 2 template params to 1 in OF9). Main solver port is straightforward (~6 line changes + Make/options).
+### EARS — Progress (2026-03-27 17:48)
+- **Completed**: Full OF8→OF9 port. All components compile and run on OpenFOAM 9.
+- **Main solver port** (3 files): Header renames, library renames, `thermo.lookup` → `thermo.properties().lookup`, combustion model de-templating
+- **DLBFoam port** (7 files): `StandardChemistryModel<ReactionThermo,ThermoType>` → `standardChemistryModel<ThermoType>`, `BasicChemistryModel<ReactionThermo>::correct()` → `basicChemistryModel::correct()`, `thermo.db()` → `thermo.T().mesh()` / `this->mesh()`, macro instantiation rewrite (`forCommonGases` → `forCoeffGases`, drop `forPolynomials`, drop ReactionThermo arg), added `OSspecific.H` for `mkDir`
+- **Tested**: Tutorial case (1D NH3/O2 detonation) runs, shock propagates at 0.01m after 16 timesteps, p/T ranges correct
+- **Warning**: `libODE_DLB.so` not built (DLBFoam ODE lib not in Allwmake) — benign, not needed for standard `ode` solver
