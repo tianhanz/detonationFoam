@@ -1,0 +1,5 @@
+# OpenFOAM build artifacts
+linux64GccDPInt32Opt/
+lnInclude/
+*.dep
+*.o
