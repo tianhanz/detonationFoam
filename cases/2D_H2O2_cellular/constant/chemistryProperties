@@ -32,7 +32,7 @@ initialChemicalTimeStep 1;
 chemistryType
 {
     solver          ode;
-    method          loadBalanced;
+    method          standard;
 }
 
 odeCoeffs
