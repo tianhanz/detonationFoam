@@ -40,3 +40,13 @@ Create learning materials and reference documentation for the detonationFoam cod
 - **Created**: `bohrium/chemkin2foam.py` — Chemkin-II → OpenFOAM .foam format converter. Needed because asurf mechanisms are Chemkin/YAML format but detonationFoam requires .foam dictionaries.
 - **Decision**: Use Burke 2011 H2/O2 mechanism (10 species, 27 reactions) for production cases instead of extracting H2/O2 subset from NH3 mechanism. Burke 2011 is the gold standard for H2/O2 kinetics, well-validated for detonation.
 - **Next**: Generate .foam mechanism files, create 1D H2/O2 CJ detonation and 2D cellular detonation case templates, test Bohrium submission.
+
+### EARS — Progress (2026-03-28 08:59)
+- **Local validation**: blockMesh + setFields succeed for 1D H2/O2 case (40K cells). Solver launch revealed format mismatches in generated .foam files.
+- **PROBLEM**: `chemkin2foam.py` output didn't match detonationFoam's expected format:
+  1. `species.foam` needs `species` keyword prefix (not just count + list)
+  2. `thermo.foam` needs bare species blocks (no outer count/parens), `nMoles 1;`, inline `lowCpCoeffs(...)`, and **polynomial transport coefficients** (`muCoeffs<8>`, `muLogCoeffs<8>`, `kappaCoeffs<8>`, `kappaLogCoeffs<8>`)
+  3. `reactions.foam` needs `reactions { ... }` wrapper (not count + parens)
+- **ROOT CAUSE**: The tutorial's .foam format is detonationFoam-specific, not standard OpenFOAM dictionary format. Transport requires Chapman-Enskog polynomial fits derived from Lennard-Jones parameters.
+- **FIX in progress**: Rewriting converter output routines to match exact tutorial format. Adding `compute_transport_polys()` using Neufeld (1972) collision integrals + numpy polynomial fitting.
+- **Decision**: Using Euler (inviscid) solver type for 1D case — transport polynomials affect viscous terms only. But must still be valid for the thermo reader to parse.
