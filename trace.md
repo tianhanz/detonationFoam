@@ -74,3 +74,9 @@ Create learning materials and reference documentation for the detonationFoam cod
   5. **APT install with retries**: OF9 installed OK (SourceForge worked on retry), but `source /opt/openfoam9/etc/bashrc` fails under `set -e` — a known issue where OF bashrc returns non-zero
 - Tried: 5 different approaches total. Current fix: `set +e` around `source bashrc`, then `set -e` again. This is a well-known OpenFOAM gotcha.
 - Root cause pattern: Each failure reveals the next layer of container incompatibility. The final script (compile from source on Bohrium + `set +e` for bashrc) addresses all discovered issues.
+
+### EARS — Progress (2026-03-28 16:42)
+- **Decision**: User will build a custom Docker image from our Dockerfile and push to `registry.dp.tech`. This eliminates all runtime installation/compilation overhead on Bohrium.
+- **Correction**: dynamicMesh2D/dynamicFvMesh2D DO compile on Foundation OF9 (PackedBoolList and 4-arg writeObject are still supported). My earlier analysis confused Foundation OF9 with ESI OpenFOAM. All 5 targets compiled locally on OF9 — confirmed by checking `$FOAM_USER_LIBBIN`. User correctly pointed out these libs will be needed for future AMR cases.
+- **Dockerfile updated**: All 4 libraries + solver compiled in image (fluxSchemes_improved, DLBFoam, dynamicMesh2D, dynamicFvMesh2D, detonationFoam_V2.0). controlDict libs entries restored.
+- **Waiting on**: User to build & push Docker image, then provide the registry address.
