@@ -25,6 +25,7 @@ Prerequisites:
 import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -34,7 +35,7 @@ from pathlib import Path
 
 # Defaults
 PROJ_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_IMAGE = "microfluidica/openfoam:9"  # public Docker Hub image
+DEFAULT_IMAGE = "registry.dp.tech/dptech/ubuntu:20.04-py3.10"  # Bohrium base image
 DEFAULT_MACHINE = "c8_m32_cpu"  # 8 cores, 32 GB — good for 1D detonation
 DEFAULT_MAX_RUN_TIME = 360  # 6 hours
 DEFAULT_DISK_SIZE = 30  # GB
@@ -77,19 +78,17 @@ def _bohr_run(args_str: str) -> subprocess.CompletedProcess:
     cmd = f"{BOHR_BIN} {args_str}"
     return subprocess.run(
         ["script", "-qc", cmd, "/dev/null"],
-        capture_output=True, text=True, env=BOHR_ENV, timeout=120,
+        capture_output=True, text=True, env=BOHR_ENV, timeout=600,
     )
 
 
 def prepare_case(case_dir: Path, np: int, tmp_base: Path) -> Path:
     """Prepare a self-contained input directory for Bohrium.
 
-    Copies the case directory and creates a run.sh wrapper that:
-    1. Sources OpenFOAM 9 environment
-    2. Compiles detonationFoam if not pre-built (for base OF9 image)
-    3. Runs blockMesh, setFields, decomposePar
-    4. Runs mpirun -np N detonationFoam_V2.0 -parallel
-    5. Reconstructs results
+    Ships the detonationFoam solver source code. On Bohrium, the run.sh:
+    1. Installs OpenFOAM 9 via APT (with retry for SourceForge mirrors)
+    2. Compiles detonationFoam + libraries from source
+    3. Runs blockMesh, setFields, decomposePar, solver, reconstructPar
     """
     input_dir = tmp_base / case_dir.name
     shutil.copytree(case_dir, input_dir)
@@ -104,23 +103,11 @@ def prepare_case(case_dir: Path, np: int, tmp_base: Path) -> Path:
             ),
         )
 
-    # Update decomposeParDict for the requested number of processors
+    # Update decomposeParDict — only change numberOfSubdomains
     decompose_file = input_dir / "system" / "decomposeParDict"
     if decompose_file.exists():
         text = decompose_file.read_text()
-        # Replace numberOfSubdomains
-        import re
-        text = re.sub(
-            r'numberOfSubdomains\s+\d+',
-            f'numberOfSubdomains  {np}',
-            text
-        )
-        # Replace simple decomposition coefficients for 1D
-        text = re.sub(
-            r'n\s+\(\s*\d+\s+\d+\s+\d+\s*\)',
-            f'n               ({np} 1 1)',
-            text
-        )
+        text = re.sub(r'numberOfSubdomains\s+\d+', f'numberOfSubdomains  {np}', text)
         decompose_file.write_text(text)
 
     # Create run.sh
@@ -135,28 +122,65 @@ echo "Host: $(hostname)"
 echo "Cores: $(nproc)"
 echo "MPI procs: {np}"
 
-# Source OpenFOAM 9
+# --- Install OpenFOAM 9 ---
+# The openfoam.org APT repo uses SourceForge mirrors which can be slow
+# from China. We use wget with retries for the GPG key, and apt with
+# retry options for the package download.
+echo "=== Installing OpenFOAM 9 ==="
+export DEBIAN_FRONTEND=noninteractive
+apt-get update -qq 2>&1 | tail -3
+apt-get install -y -qq software-properties-common wget gnupg2 2>&1 | tail -3
+
+# Import GPG key without gpg-agent
+wget -qO /etc/apt/trusted.gpg.d/openfoam.asc https://dl.openfoam.org/gpg.key 2>&1
+
+# Add OpenFOAM repo
+add-apt-repository -y http://dl.openfoam.org/ubuntu 2>&1 | tail -3
+apt-get update -qq 2>&1 | tail -3
+
+# Install with retry — SourceForge mirrors can be flaky
+for attempt in 1 2 3; do
+    echo "OpenFOAM install attempt $attempt..."
+    if apt-get install -y -o Acquire::Retries=3 -o Acquire::http::Timeout=120 openfoam9 2>&1 | tail -10; then
+        echo "OpenFOAM 9 installed successfully."
+        break
+    fi
+    if [ $attempt -lt 3 ]; then
+        echo "Retrying in 30s..."
+        sleep 30
+        apt-get update -qq 2>&1 | tail -3
+    else
+        echo "FATAL: Failed to install OpenFOAM 9 after 3 attempts"
+        exit 1
+    fi
+done
+
+# Source OpenFOAM 9 environment
+# bashrc can trigger non-zero exits under set -e (unset vars, etc.)
+set +e
 source /opt/openfoam9/etc/bashrc
+set -e
+echo "WM_PROJECT_DIR=$WM_PROJECT_DIR"
+echo "PATH includes wmake: $(which wmake 2>/dev/null || echo NOT_FOUND)"
 
-# Compile detonationFoam from source
+# --- Compile detonationFoam from source ---
+CASE_DIR=$(pwd)
 echo "=== Compiling detonationFoam ==="
-cd applications/solvers/detonationFoam_V2.0
 
-# Compile libraries
-cd fluxSchemes_improved && wmake libso 2>&1 | tail -3 && cd ..
-cd ../../../applications/libraries/DLBFoam-1.0-1.0_OF8/src && wmake libso 2>&1 | tail -3 && cd ../../../..
-cd applications/libraries/dynamicMesh2D && wmake libso 2>&1 | tail -3 && cd ../../..
-cd applications/libraries/dynamicFvMesh2D && wmake libso 2>&1 | tail -3 && cd ../../..
-
-# Compile solver
-cd applications/solvers/detonationFoam_V2.0 && wmake 2>&1 | tail -5 && cd ../../..
+cd applications/solvers/detonationFoam_V2.0/fluxSchemes_improved && wmake libso 2>&1 | tail -3 && cd "$CASE_DIR"
+cd applications/libraries/DLBFoam-1.0-1.0_OF8/src && wmake libso 2>&1 | tail -3 && cd "$CASE_DIR"
+cd applications/libraries/dynamicMesh2D && wmake libso 2>&1 | tail -3 && cd "$CASE_DIR"
+cd applications/libraries/dynamicFvMesh2D && wmake libso 2>&1 | tail -3 && cd "$CASE_DIR"
+cd applications/solvers/detonationFoam_V2.0 && wmake 2>&1 | tail -5 && cd "$CASE_DIR"
 
 echo "=== Solver compiled ==="
 which detonationFoam_V2.0
 
-# Run case
-echo "=== Setting up case ==="
+# --- Run case ---
+echo "=== blockMesh ==="
 blockMesh 2>&1 | tail -5
+
+echo "=== setFields ==="
 setFields 2>&1 | tail -5
 
 echo "=== Decomposing for {np} processors ==="
