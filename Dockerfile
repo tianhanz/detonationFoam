@@ -29,12 +29,11 @@ COPY applications/ /opt/detonationFoam/applications/
 
 SHELL ["/bin/bash", "-c"]
 
-# Compile libraries
+# Compile libraries (skip dynamicMesh2D/dynamicFvMesh2D — not yet ported to OF9,
+# only needed for adaptive mesh refinement which current cases don't use)
 RUN source /opt/openfoam9/etc/bashrc && \
     cd /opt/detonationFoam/applications/solvers/detonationFoam_V2.0/fluxSchemes_improved && wmake libso && \
-    cd /opt/detonationFoam/applications/libraries/DLBFoam-1.0-1.0_OF8/src && wmake libso && \
-    cd /opt/detonationFoam/applications/libraries/dynamicMesh2D && wmake libso && \
-    cd /opt/detonationFoam/applications/libraries/dynamicFvMesh2D && wmake libso
+    cd /opt/detonationFoam/applications/libraries/DLBFoam-1.0-1.0_OF8/src && wmake libso
 
 # Compile solver
 RUN source /opt/openfoam9/etc/bashrc && \

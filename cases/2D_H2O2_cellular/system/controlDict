@@ -17,8 +17,6 @@ FoamFile
 
 libs
 (
-  "libdynamicMesh2D.so"
-  "libdynamicFvMesh2D.so"
   "libchemistryModel_DLB.so"
 );
 
