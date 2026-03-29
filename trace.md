@@ -109,3 +109,9 @@ Create learning materials and reference documentation for the detonationFoam cod
   - Handles parallel mesh changes across 4 MPI ranks
   - Writes `cellLevel` field for visualization (`dumpLevel true`)
 - **Chemistry FPE note**: Both AMR and non-AMR cases crash when H2/O2 chemistry activates (~10-40 ns). This is an OF9 seulex stiffness issue with the Burke mechanism on coarse meshes, not related to AMR. Production runs should use FOAM_SIGFPE=false or a more robust ODE solver.
+
+### EARS — Progress (2026-03-29 20:19)
+- **Poinsot agent review completed**: Systematic audit of detonationFoam covering conservation equations, numerical methods, resolution, BCs, and chemistry FPE.
+- **Key diagnosis**: seulex ODE solver produces intermediate sub-step temperatures > 6000 K, causing JANAF polynomial divergence → negative Cp → FPE. Root cause is the extrapolation method, not AMR.
+- **Action**: Switching ODE solver from `seulex` to `Rosenbrock34` (L-stable, no extrapolation) with tightened tolerances (`absTol 1e-10, relTol 1e-6`). Testing now on 2D_AMR_test case.
+- **Other Poinsot findings**: (1) species transport is semi-implicit, not fully conservative via HLLC — acceptable at CFL=0.1; (2) time integration is 1st-order Euler — adequate at low CFL but not ideal; (3) current resolution (50μm with 2-level AMR) gives 1-4 pts/induction zone — sufficient for CJ speed but not ZND profile or cellular structure.
