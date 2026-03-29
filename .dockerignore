@@ -1,0 +1,18 @@
+# Build artifacts
+**/linux64GccDPInt32Opt/
+**/lnInclude/
+**/*.dep
+**/*.o
+
+# Runtime artifacts
+**/constant/polyMesh/
+**/processor[0-9]*/
+**/log.*
+
+# Git
+.git/
+
+# Docs and misc
+docs/
+*.md
+!applications/**/README*

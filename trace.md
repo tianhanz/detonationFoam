@@ -115,3 +115,7 @@ Create learning materials and reference documentation for the detonationFoam cod
 - **Key diagnosis**: seulex ODE solver produces intermediate sub-step temperatures > 6000 K, causing JANAF polynomial divergence → negative Cp → FPE. Root cause is the extrapolation method, not AMR.
 - **Action**: Switching ODE solver from `seulex` to `Rosenbrock34` (L-stable, no extrapolation) with tightened tolerances (`absTol 1e-10, relTol 1e-6`). Testing now on 2D_AMR_test case.
 - **Other Poinsot findings**: (1) species transport is semi-implicit, not fully conservative via HLLC — acceptable at CFL=0.1; (2) time integration is 1st-order Euler — adequate at low CFL but not ideal; (3) current resolution (50μm with 2-level AMR) gives 1-4 pts/induction zone — sufficient for CJ speed but not ZND profile or cellular structure.
+
+### EARS — Progress (2026-03-30 00:34)
+- **Rosenbrock34 fix verified and committed** (commit `41f6a4d`): AMR test ran stably to t=1.39μs (vs seulex crash at 40ns). Applied to all 3 cases.
+- **Dockerfile rewritten**: Old version had wrong paths (`applications/libraries/` doesn't exist — all libs are under `applications/solvers/detonationFoam_V2.0/`). Fixed compilation order: (1) fluxSchemes_improved, (2) dynamicMesh2D/dynamicMesh → libdynamicMesh2D, (3) dynamicMesh2D/dynamicFvMesh → libdynamicFvMesh2D (depends on #2), (4) DLBFoam chemistryModel, (5) main solver. Also added COPY cases/ for test cases.
