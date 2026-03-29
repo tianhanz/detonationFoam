@@ -80,3 +80,32 @@ Create learning materials and reference documentation for the detonationFoam cod
 - **Correction**: dynamicMesh2D/dynamicFvMesh2D DO compile on Foundation OF9 (PackedBoolList and 4-arg writeObject are still supported). My earlier analysis confused Foundation OF9 with ESI OpenFOAM. All 5 targets compiled locally on OF9 — confirmed by checking `$FOAM_USER_LIBBIN`. User correctly pointed out these libs will be needed for future AMR cases.
 - **Dockerfile updated**: All 4 libraries + solver compiled in image (fluxSchemes_improved, DLBFoam, dynamicMesh2D, dynamicFvMesh2D, detonationFoam_V2.0). controlDict libs entries restored.
 - **Waiting on**: User to build & push Docker image, then provide the registry address.
+
+### EARS — Progress (2026-03-29 10:25)
+- **Completed**: Local parallel tests PASS for both 1D (8 cores) and 2D (8 cores) H2/O2 cases. Key fix: DLBFoam `loadBalanced` method requires nonexistent `libODE_DLB.so` → switched to `method standard`. Committed 4 config files.
+- **Now**: Testing dynamicMesh2D/dynamicFvMesh2D AMR functionality per user request ("网格功能也要充分测试").
+- **AMR test design**: Creating `cases/2D_AMR_test/` — small 2D domain (5cm x 5mm), coarse base mesh (6250 cells, dx=200μm), 2-level AMR using `magGradrho` field (computed by solver in `detoCellular.H`). This tests `dynamicRefineFvMesh2D` class with `hexRef82D` engine.
+- **Key discovery**: The 2D AMR library uses `dynamicRefineFvMesh2DCoeffs` subdict (not `dynamicRefineFvMeshCoeffs`). Requires extra parameters not in standard OF: `axis` (empty direction index), `axisVal`, `nBufferLayersR`. The example `dynamicMeshDict` shipped with the source is actually a 3D template — not directly usable for 2D cases.
+
+### EARS — Progress (2026-03-29 11:46)
+- **AMR test case created**: `cases/2D_AMR_test/` — 2D domain (5cm x 5mm), coarse base mesh (250x25=6250 cells, dx=200μm), 2-level AMR targeting `magGradrho` field.
+- **First run**: `dynamicRefineFvMesh2D` selected correctly, solver ran with AMR checks every timestep. But **no refinement triggered** — initial `lowerRefineLevel=1e4` was too high. Actual `magGradrho` max at shock front is ~5500.
+- **Fix applied**: Lowered threshold to `lowerRefineLevel=500`, `unrefineLevel=100`. Re-ran with corrected thresholds.
+- **Key insight**: `magGradrho` dimensions are [kg/m^4] = density gradient magnitude. On a coarse 200μm mesh the shock gradient is numerically smeared, so the peak is lower than on a fine mesh. Threshold must be calibrated to the base mesh resolution.
+
+### EARS — Progress (2026-03-29 12:00)
+- **AMR VERIFIED**: `dynamicRefineFvMesh2D` with `hexRef82D` works correctly in parallel (4 cores). Full refinement/unrefinement cycle confirmed:
+  1. Step 1: 6250 → 6850 cells (200 cells refined at shock front)
+  2. Step 2: 6850 → 8050 cells (400 more refined), then 8050 → 7900 (50 points unrefined behind shock)
+  3. Step 3: 7900 → 7150 cells (250 points unrefined — shock moved away)
+  4. Step 4: 7150 → 7450 cells (100 cells re-refined — tracking shock advance)
+  5. Stabilized at 7450 cells for ~30 more timesteps until chemistry FPE at t≈41ns
+- **AMR NOT causing crash**: Ran identical case with `staticFvMesh` — crashes at SAME point (t≈17ns, actually earlier). The FPE is in seulex ODE solver's `kf()` (Arrhenius forward rate) when post-shock T exceeds JANAF validity. AMR run actually survived longer (41ns vs 17ns) because refined mesh better resolves the shock.
+- **Conclusion**: AMR library fully functional for 2D planar detonation. The `dynamicRefineFvMesh2D` class correctly:
+  - Selects cells where `lowerRefineLevel < magGradrho < upperRefineLevel`
+  - Extends selection by `nBufferLayersR=2` buffer layers
+  - Refines (splitting hex→4 in 2D) up to `maxRefinement=2` levels
+  - Unrefines where `magGradrho < unrefineLevel` with `nBufferLayers=2` protection
+  - Handles parallel mesh changes across 4 MPI ranks
+  - Writes `cellLevel` field for visualization (`dumpLevel true`)
+- **Chemistry FPE note**: Both AMR and non-AMR cases crash when H2/O2 chemistry activates (~10-40 ns). This is an OF9 seulex stiffness issue with the Burke mechanism on coarse meshes, not related to AMR. Production runs should use FOAM_SIGFPE=false or a more robust ODE solver.
