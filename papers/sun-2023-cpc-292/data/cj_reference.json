@@ -1,0 +1,21 @@
+{
+  "V_CJ_ms": 1976.32,
+  "T_CJ_K": 2964.69,
+  "P_CJ_atm": 15.573,
+  "P_CJ_Pa": 1577966.11,
+  "rho_CJ": 1.530727,
+  "eta_CJ": 1.80197,
+  "a_CJ_ms": 1131.4,
+  "gamma_CJ": 1.2417,
+  "rho0": 0.849472,
+  "T0_K": 300.0,
+  "P0_Pa": 101325.0,
+  "mixture": "H2:2, O2:1, N2:3.76",
+  "mechanism": "h2o2.yaml (10sp/29rxn)",
+  "cantera_version": "3.2.0",
+  "errors_pct": {
+    "V_CJ": 0.42,
+    "P_CJ": 0.17,
+    "T_CJ": 0.5
+  }
+}

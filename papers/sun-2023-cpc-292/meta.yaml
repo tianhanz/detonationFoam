@@ -1,4 +1,4 @@
-status: NOT_STARTED
+status: IN_PROGRESS
 tier: A
 wts_score: 14
 wts_breakdown:
@@ -8,7 +8,7 @@ wts_breakdown:
   D4: 2
   D5: 2
   D6: 1
-phase: null
+phase: 3
 last_updated: '2026-03-30'
 ref_num: 2
 authors: J. Sun, J. Zhu, Z. Chen
@@ -25,9 +25,28 @@ dimensions: 1D/2D
 geometry: 1D-tube, 2D-channel
 solver_type: Euler
 amr_required: false
-figures_total: 0
+figures_total: 8
 figures_done: 0
-figures: {}
+figures:
+  fig3: {status: running, note: "1D CJ detonation pressure profile"}
+  fig4: {status: running, note: "1D CJ detonation temperature profile"}
+  fig5: {status: running, note: "1D CJ detonation velocity vs time"}
+  fig6: {status: running, note: "2D cellular detonation pressure contour"}
+  fig7: {status: running, note: "2D cellular soot foil (max pressure track)"}
+  fig8: {status: pending, note: "Grid convergence study"}
+  fig9: {status: pending, note: "Computational performance"}
+  fig10: {status: pending, note: "Species profiles"}
 key_result: ''
 blockers: []
 notes: THE solver paper. Cases already in cases/ directory.
+compute:
+  bohrium_jobs:
+    - {job_id: 22333336, case: 1D_H2O2_detonation, machine: c4_m8_cpu, status: running}
+    - {job_id: 22332935, case: 2D_AMR_test, machine: c4_m8_cpu, status: running}
+  independent_reference:
+    V_CJ_ms: 1976.32
+    T_CJ_K: 2964.7
+    P_CJ_atm: 15.573
+    method: "Cantera h2o2.yaml equilibrium Hugoniot sweep"
+    errors_vs_literature_pct: {V_CJ: 0.42, P_CJ: 0.17, T_CJ: 0.50}
+    verdict: PASS
