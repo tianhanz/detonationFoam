@@ -1,25 +1,13 @@
 #!/usr/bin/env python3
 """Submit detonationFoam jobs to Bohrium cloud compute.
 
-Packages an OpenFOAM case directory into a Bohrium container job for
-parallel MPI execution. Designed for detonationFoam V2.0 on OpenFOAM 9.
+Uses a pre-compiled Docker image with OF9 + detonationFoam. No compilation
+needed on Bohrium — just blockMesh, setFields, decomposePar, and run.
 
 Usage:
-    # Submit a case with default settings (8 cores)
-    python submit_detonation.py cases/1D_H2O2_detonation
-
-    # Submit with more cores and longer runtime
-    python submit_detonation.py cases/1D_H2O2_detonation --np 32 --machine c32_m64_cpu --max-time 720
-
-    # Dry run
-    python submit_detonation.py cases/1D_H2O2_detonation --dry-run
-
-    # Poll until completion
-    python submit_detonation.py cases/1D_H2O2_detonation --poll
-
-Prerequisites:
-    - bohr CLI installed (~/.bohrium/bohr)
-    - ACCESS_KEY and PROJECT_ID set in environment or ~/.openclaw/openclaw.json
+    python submit_detonation.py cases/1D_H2O2_detonation --np 4
+    python submit_detonation.py cases/2D_AMR_test --np 4
+    python submit_detonation.py cases/1D_H2O2_detonation --np 4 --poll
 """
 
 import argparse
@@ -33,20 +21,18 @@ import tempfile
 import time
 from pathlib import Path
 
-# Defaults
 PROJ_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_IMAGE = "registry.dp.tech/dptech/ubuntu:20.04-py3.10"  # Bohrium base image
-DEFAULT_MACHINE = "c8_m32_cpu"  # 8 cores, 32 GB — good for 1D detonation
-DEFAULT_MAX_RUN_TIME = 360  # 6 hours
-DEFAULT_DISK_SIZE = 30  # GB
-DEFAULT_NP = 8  # MPI processes
+DEFAULT_IMAGE = "registry.dp.tech/dptech/dp/native/prod-1408/detonationfoam:0.2"
+DEFAULT_MACHINE = "c4_m8_cpu"
+DEFAULT_MAX_RUN_TIME = 360
+DEFAULT_DISK_SIZE = 30
+DEFAULT_NP = 4
 
 BOHR_BIN = os.path.expanduser("~/.bohrium/bohr")
 BOHR_ENV: dict[str, str] = {}
 
 
 def _load_bohrium_env():
-    """Load ACCESS_KEY and PROJECT_ID from environment or openclaw config."""
     global BOHR_ENV
     env = os.environ.copy()
     env["OPENAPI_HOST"] = "https://openapi.dp.tech"
@@ -74,7 +60,6 @@ def _load_bohrium_env():
 
 
 def _bohr_run(args_str: str) -> subprocess.CompletedProcess:
-    """Run a bohr CLI command via pseudo-TTY wrapper."""
     cmd = f"{BOHR_BIN} {args_str}"
     return subprocess.run(
         ["script", "-qc", cmd, "/dev/null"],
@@ -82,38 +67,40 @@ def _bohr_run(args_str: str) -> subprocess.CompletedProcess:
     )
 
 
-def prepare_case(case_dir: Path, np: int, tmp_base: Path) -> Path:
-    """Prepare a self-contained input directory for Bohrium.
-
-    Ships the detonationFoam solver source code. On Bohrium, the run.sh:
-    1. Installs OpenFOAM 9 via APT (with retry for SourceForge mirrors)
-    2. Compiles detonationFoam + libraries from source
-    3. Runs blockMesh, setFields, decomposePar, solver, reconstructPar
-    """
+def prepare_case(case_dir: Path, np: int, tmp_base: Path, is_amr: bool) -> Path:
+    """Prepare input directory for Bohrium. No solver source needed — image is pre-compiled."""
     input_dir = tmp_base / case_dir.name
-    shutil.copytree(case_dir, input_dir)
 
-    # Copy solver source for compilation on Bohrium
-    solver_src = PROJ_ROOT / "applications"
-    if solver_src.is_dir():
-        shutil.copytree(
-            solver_src, input_dir / "applications",
-            ignore=shutil.ignore_patterns(
-                "*.o", "*.dep", "lnInclude", "linux64*", "__pycache__"
-            ),
-        )
+    # Copy case files only (no solver source)
+    shutil.copytree(
+        case_dir, input_dir,
+        ignore=shutil.ignore_patterns(
+            "processor*", "log.*", "constant/polyMesh", "*.foam~"
+        ),
+    )
 
-    # Update decomposeParDict — only change numberOfSubdomains
+    # Update numberOfSubdomains
     decompose_file = input_dir / "system" / "decomposeParDict"
     if decompose_file.exists():
         text = decompose_file.read_text()
         text = re.sub(r'numberOfSubdomains\s+\d+', f'numberOfSubdomains  {np}', text)
         decompose_file.write_text(text)
 
-    # Create run.sh
+    # AMR cases need dynamicMeshDict copied to processor dirs after decomposePar
+    amr_extra = ""
+    if is_amr:
+        amr_extra = """
+echo "=== Copying dynamicMeshDict to processor directories ==="
+for d in processor*/; do
+    cp constant/dynamicMeshDict "$d/constant/" 2>/dev/null || true
+done
+"""
+
     run_sh = input_dir / "run.sh"
     run_sh.write_text(f"""\
 #!/bin/bash
+# Redirect ALL output to run.log so Bohrium can capture it
+exec > >(tee run.log) 2>&1
 set -e
 
 echo "=== detonationFoam Bohrium Job ==="
@@ -121,76 +108,54 @@ echo "Date: $(date)"
 echo "Host: $(hostname)"
 echo "Cores: $(nproc)"
 echo "MPI procs: {np}"
+echo "Working dir: $(pwd)"
+ls -la
 
-# --- Install OpenFOAM 9 ---
-# The openfoam.org APT repo uses SourceForge mirrors which can be slow
-# from China. We use wget with retries for the GPG key, and apt with
-# retry options for the package download.
-echo "=== Installing OpenFOAM 9 ==="
-export DEBIAN_FRONTEND=noninteractive
-apt-get update -qq 2>&1 | tail -3
-apt-get install -y -qq software-properties-common wget gnupg2 2>&1 | tail -3
-
-# Import GPG key without gpg-agent
-wget -qO /etc/apt/trusted.gpg.d/openfoam.asc https://dl.openfoam.org/gpg.key 2>&1
-
-# Add OpenFOAM repo
-add-apt-repository -y http://dl.openfoam.org/ubuntu 2>&1 | tail -3
-apt-get update -qq 2>&1 | tail -3
-
-# Install with retry — SourceForge mirrors can be flaky
-for attempt in 1 2 3; do
-    echo "OpenFOAM install attempt $attempt..."
-    if apt-get install -y -o Acquire::Retries=3 -o Acquire::http::Timeout=120 openfoam9 2>&1 | tail -10; then
-        echo "OpenFOAM 9 installed successfully."
-        break
-    fi
-    if [ $attempt -lt 3 ]; then
-        echo "Retrying in 30s..."
-        sleep 30
-        apt-get update -qq 2>&1 | tail -3
-    else
-        echo "FATAL: Failed to install OpenFOAM 9 after 3 attempts"
-        exit 1
-    fi
-done
-
-# Source OpenFOAM 9 environment
-# bashrc can trigger non-zero exits under set -e (unset vars, etc.)
+# Source OF9 (pre-installed in image)
 set +e
 source /opt/openfoam9/etc/bashrc
 set -e
-echo "WM_PROJECT_DIR=$WM_PROJECT_DIR"
-echo "PATH includes wmake: $(which wmake 2>/dev/null || echo NOT_FOUND)"
 
-# --- Compile detonationFoam from source ---
-CASE_DIR=$(pwd)
-echo "=== Compiling detonationFoam ==="
+echo "=== Environment ==="
+echo "FOAM_USER_LIBBIN=$FOAM_USER_LIBBIN"
+echo "FOAM_USER_APPBIN=$FOAM_USER_APPBIN"
+echo "PATH includes OF: $(echo $PATH | tr ':' '\\n' | grep -i foam | head -3)"
 
-cd applications/solvers/detonationFoam_V2.0/fluxSchemes_improved && wmake libso 2>&1 | tail -3 && cd "$CASE_DIR"
-cd applications/libraries/DLBFoam-1.0-1.0_OF8/src && wmake libso 2>&1 | tail -3 && cd "$CASE_DIR"
-cd applications/libraries/dynamicMesh2D && wmake libso 2>&1 | tail -3 && cd "$CASE_DIR"
-cd applications/libraries/dynamicFvMesh2D && wmake libso 2>&1 | tail -3 && cd "$CASE_DIR"
-cd applications/solvers/detonationFoam_V2.0 && wmake 2>&1 | tail -5 && cd "$CASE_DIR"
+# Verify solver is available
+echo "=== Checking pre-compiled solver ==="
+which detonationFoam_V2.0 || true
+ls $FOAM_USER_LIBBIN/lib*.so 2>/dev/null || echo "No user libs in FOAM_USER_LIBBIN"
 
-echo "=== Solver compiled ==="
-which detonationFoam_V2.0
+# Check if solver is in image's compiled location
+if ! which detonationFoam_V2.0 >/dev/null 2>&1; then
+    echo "Solver not in PATH, checking image build location..."
+    export PATH=$PATH:/root/OpenFOAM/-9/platforms/linux64GccDPInt32Opt/bin
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/root/OpenFOAM/-9/platforms/linux64GccDPInt32Opt/lib
+    which detonationFoam_V2.0 || {{ echo "ERROR: detonationFoam_V2.0 not found"; exit 1; }}
+fi
 
-# --- Run case ---
 echo "=== blockMesh ==="
-blockMesh 2>&1 | tail -5
+blockMesh
+echo "blockMesh done, exit code: $?"
 
 echo "=== setFields ==="
-setFields 2>&1 | tail -5
+setFields
+echo "setFields done, exit code: $?"
 
 echo "=== Decomposing for {np} processors ==="
-decomposePar 2>&1 | tail -5
+decomposePar
+echo "decomposePar done, exit code: $?"
 
+echo "=== Checking processor directories ==="
+ls -d processor*/ 2>/dev/null || {{ echo "ERROR: No processor directories found!"; exit 1; }}
+{amr_extra}
 echo "=== Running detonationFoam ==="
-mpirun -np {np} --allow-run-as-root --oversubscribe detonationFoam_V2.0 -parallel 2>&1 | tee run.log
+export OMPI_ALLOW_RUN_AS_ROOT=1
+export OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
+mpirun -np {np} --oversubscribe detonationFoam_V2.0 -parallel 2>&1
 
 echo "=== Reconstructing ==="
-reconstructPar 2>&1 | tail -10
+reconstructPar 2>&1
 
 echo "=== Job complete ==="
 echo "Date: $(date)"
@@ -202,12 +167,11 @@ ls -la
 
 def submit_job(case_name: str, input_dir: Path, project_id: int,
                machine: str, image: str, max_time: int, disk: int) -> str | None:
-    """Submit a job to Bohrium."""
     job_config = {
         "job_name": f"detonationFoam-{case_name}",
         "command": "bash run.sh",
         "log_file": "run.log",
-        "backward_files": [],  # keep everything
+        "backward_files": [],
         "project_id": project_id,
         "machine_type": machine,
         "image_address": image,
@@ -234,9 +198,7 @@ def submit_job(case_name: str, input_dir: Path, project_id: int,
 
 
 def poll_jobs(job_ids: list[str], interval: int = 60):
-    """Poll Bohrium REST API for job status."""
     import urllib.request
-
     ak = BOHR_ENV.get("ACCESS_KEY", "")
     base = "https://openapi.dp.tech/openapi/v1"
     status_map = {0: "Pending", 1: "Running", 2: "Finished", 3: "Scheduling", -1: "Failed"}
@@ -282,24 +244,19 @@ def poll_jobs(job_ids: list[str], interval: int = 60):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Submit detonationFoam jobs to Bohrium cloud compute"
+        description="Submit detonationFoam jobs to Bohrium (pre-compiled image)"
     )
     parser.add_argument("case", type=Path, help="Path to OpenFOAM case directory")
     parser.add_argument("--np", type=int, default=DEFAULT_NP,
                         help=f"MPI processes (default: {DEFAULT_NP})")
-    parser.add_argument("--project-id", type=int, default=0,
-                        help="Bohrium project ID")
+    parser.add_argument("--project-id", type=int, default=0)
     parser.add_argument("--machine", default=DEFAULT_MACHINE,
                         help=f"Machine type (default: {DEFAULT_MACHINE})")
-    parser.add_argument("--image", default=DEFAULT_IMAGE,
-                        help=f"Docker image (default: {DEFAULT_IMAGE})")
-    parser.add_argument("--max-time", type=int, default=DEFAULT_MAX_RUN_TIME,
-                        help=f"Max run time in minutes (default: {DEFAULT_MAX_RUN_TIME})")
-    parser.add_argument("--disk", type=int, default=DEFAULT_DISK_SIZE,
-                        help=f"Disk size in GB (default: {DEFAULT_DISK_SIZE})")
+    parser.add_argument("--image", default=DEFAULT_IMAGE)
+    parser.add_argument("--max-time", type=int, default=DEFAULT_MAX_RUN_TIME)
+    parser.add_argument("--disk", type=int, default=DEFAULT_DISK_SIZE)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--poll", action="store_true")
-    parser.add_argument("--download", type=Path, default=None)
     args = parser.parse_args()
 
     if args.project_id == 0:
@@ -314,7 +271,10 @@ def main():
         sys.exit(1)
 
     case_name = case_dir.name
+    is_amr = (case_dir / "constant" / "dynamicMeshDict").exists()
+
     print(f"Case       : {case_name}")
+    print(f"AMR        : {'yes' if is_amr else 'no'}")
     print(f"MPI procs  : {args.np}")
     print(f"Machine    : {args.machine}")
     print(f"Image      : {args.image}")
@@ -328,7 +288,7 @@ def main():
     tmp_base = Path(tempfile.mkdtemp(prefix=f"bohrium_{case_name}_"))
     print(f"Staging to : {tmp_base}")
 
-    input_dir = prepare_case(case_dir, args.np, tmp_base)
+    input_dir = prepare_case(case_dir, args.np, tmp_base, is_amr)
     job_id = submit_job(case_name, input_dir, args.project_id,
                         args.machine, args.image, args.max_time, args.disk)
 
@@ -336,10 +296,6 @@ def main():
         print(f"\nSubmitted: Job ID = {job_id}")
         if args.poll:
             poll_jobs([job_id])
-        if args.download:
-            args.download.mkdir(parents=True, exist_ok=True)
-            print(f"Downloading to {args.download}...")
-            _bohr_run(f"job download -j {job_id} -o {args.download}")
     else:
         print("\nSubmission failed.")
         sys.exit(1)

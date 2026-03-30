@@ -125,3 +125,10 @@ Create learning materials and reference documentation for the detonationFoam cod
 - Accomplished: (1) AMR mesh testing completed — dynamicRefineFvMesh2D verified with refinement/unrefinement in parallel; (2) Poinsot agent review identified seulex ODE as root cause of chemistry FPE; (3) Switched all cases to Rosenbrock34 — AMR test stable to 1.39μs; (4) Fixed Dockerfile with correct paths and compilation order; (5) Cleaned 1.1GB polyMesh from git history, force pushed.
 - Next session: (1) User is creating a new server node — needs to merge vk/8b8c-learn-code into main before deploying; (2) main branch is stale (upstream OF8 code only), all OF9 work is on vk/8b8c-learn-code; (3) After merge, user clones main and follows compile steps; (4) Bohrium job submission still pending — need Docker image address once user builds it.
 - Open issues: (1) DLBFoam loadBalanced method unusable (libODE_DLB.so missing); (2) Poinsot review noted resolution insufficient for ZND profile/cellular structure (need 3-4 AMR levels); (3) correctFluxes warnings for HLLC internal surfaceScalarFields (cosmetic, not functional).
+
+### EARS — Progress (2026-03-30 11:19)
+- **Merged vk/8b8c-learn-code into main**: All OF9 work now on main branch. Cleaned processor dirs and nonuniform 0/T, 0/p from git tracking. Force pushed clean main to origin.
+- **User built Docker image**: `registry.dp.tech/dptech/dp/native/prod-1408/detonationfoam:0.2` — pre-compiled OF9 + detonationFoam + all libraries.
+- **User tested on new 4-core server**: Hit OpenMPI root restriction (fixed with `OMPI_ALLOW_RUN_AS_ROOT=1`) and slot exhaustion (1D case had `numberOfSubdomains 8` for 4-core node).
+- **Rewrote submit_detonation.py**: Old version compiled from source on Bohrium (wrong paths, slow). New version uses pre-compiled image — just blockMesh/setFields/decomposePar/run. Auto-detects AMR cases (copies dynamicMeshDict to processor dirs). Default image set to user's registry address.
+- **Submitting Bohrium test jobs now**: 1D and 2D_AMR_test cases, 4 cores each, `c4_m8_cpu` machine type.
