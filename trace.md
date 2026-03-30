@@ -132,3 +132,9 @@ Create learning materials and reference documentation for the detonationFoam cod
 - **User tested on new 4-core server**: Hit OpenMPI root restriction (fixed with `OMPI_ALLOW_RUN_AS_ROOT=1`) and slot exhaustion (1D case had `numberOfSubdomains 8` for 4-core node).
 - **Rewrote submit_detonation.py**: Old version compiled from source on Bohrium (wrong paths, slow). New version uses pre-compiled image — just blockMesh/setFields/decomposePar/run. Auto-detects AMR cases (copies dynamicMeshDict to processor dirs). Default image set to user's registry address.
 - **Submitting Bohrium test jobs now**: 1D and 2D_AMR_test cases, 4 cores each, `c4_m8_cpu` machine type.
+
+### EARS — Progress (2026-03-30 12:31)
+- **Bohrium job debugging**: First round (jobs 22332913/22332916) failed — run.sh piped preprocessing to `tail` so logs were invisible. Fixed: added `exec > >(tee run.log) 2>&1` to capture ALL output.
+- **Root cause found for 1D failure**: decomposePar crashed because `method simple` with `n (8 1 1)` conflicts with `numberOfSubdomains 4`. The `simpleCoeffs` requires n₁×n₂×n₃ = numberOfSubdomains exactly.
+- **Fix**: `prepare_case()` now overwrites decomposeParDict entirely with `method scotch` (auto-partitions for any np). 2D case already used scotch so was unaffected.
+- **Second round submitted**: Jobs 22332934 (1D) and 22332935 (2D_AMR). 1D failed again with the decompose mismatch — fix not yet deployed. Resubmitting now with scotch override.

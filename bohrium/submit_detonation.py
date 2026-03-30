@@ -79,12 +79,32 @@ def prepare_case(case_dir: Path, np: int, tmp_base: Path, is_amr: bool) -> Path:
         ),
     )
 
-    # Update numberOfSubdomains
+    # Override decomposeParDict: set np and force scotch (works for any np)
     decompose_file = input_dir / "system" / "decomposeParDict"
     if decompose_file.exists():
-        text = decompose_file.read_text()
-        text = re.sub(r'numberOfSubdomains\s+\d+', f'numberOfSubdomains  {np}', text)
-        decompose_file.write_text(text)
+        decompose_file.write_text(f"""\
+/*--------------------------------*- C++ -*----------------------------------*\\
+  =========                 |
+  \\\\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\\\    /   O peration     | Website:  https://openfoam.org
+    \\\\  /    A nd           | Version:  9
+     \\\\/     M anipulation  |
+\\*---------------------------------------------------------------------------*/
+FoamFile
+{{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      decomposeParDict;
+}}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+numberOfSubdomains  {np};
+
+method          scotch;
+
+// ************************************************************************* //
+""")
 
     # AMR cases need dynamicMeshDict copied to processor dirs after decomposePar
     amr_extra = ""
