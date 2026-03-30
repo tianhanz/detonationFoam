@@ -1,0 +1,32 @@
+status: NOT_STARTED
+tier: A
+wts_score: 18
+wts_breakdown:
+  D1: 2
+  D2: 2
+  D3: 1
+  D4: 2
+  D5: 2
+  D6: 1
+phase: null
+last_updated: '2026-03-30'
+ref_num: 7
+authors: J. Sun, Z. Chen, et al.
+title: Numerical study on detonation initiation by multiple hot spots
+journal: Proceedings of the Combustion Institute
+volume: '40'
+year: 2024
+doi: ''
+fuel: H2/air
+mechanism: Burke 2011 H2/O2 11sp/27rxn
+mechanism_available: true
+dimensions: 1D/2D
+geometry: 1D-tube, 2D-channel
+solver_type: Euler
+amr_required: false
+figures_total: 0
+figures_done: 0
+figures: {}
+key_result: ''
+blockers: []
+notes: Multiple hot-spot initiation. Extends solver paper cases.

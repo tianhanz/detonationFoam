@@ -1,0 +1,33 @@
+status: NOT_STARTED
+tier: B
+wts_score: 32
+wts_breakdown:
+  D1: 3
+  D2: 3
+  D3: 4
+  D4: 3
+  D5: 2
+  D6: 2
+phase: null
+last_updated: '2026-03-30'
+ref_num: 13
+authors: Y. Liu, et al.
+title: Numerical study of wedge-induced oblique detonation waves in homogeneous and
+  inhomogeneous n-dodecane/air mixtures
+journal: Physics of Fluids
+volume: '37'
+year: 2025
+doi: ''
+fuel: n-C12H26/air
+mechanism: Reduced n-dodecane (~30-55sp)
+mechanism_available: false
+dimensions: 2D
+geometry: 2D-wedge
+solver_type: Euler
+amr_required: false
+figures_total: 0
+figures_done: 0
+figures: {}
+key_result: ''
+blockers: []
+notes: Large mechanism + wedge geometry. Inhomogeneous variant adds complexity.

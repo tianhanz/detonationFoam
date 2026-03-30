@@ -1,0 +1,33 @@
+status: NOT_STARTED
+tier: B
+wts_score: 26
+wts_breakdown:
+  D1: 2
+  D2: 2
+  D3: 3
+  D4: 3
+  D5: 2
+  D6: 2
+phase: null
+last_updated: '2026-03-30'
+ref_num: 14
+authors: J. Sun, Z. Chen, et al.
+title: Numerical investigation of detonation initiation and propagation in non-uniformly
+  cracked ammonia and air mixtures
+journal: Combustion and Flame
+volume: '281'
+year: 2025
+doi: ''
+fuel: cracked NH3/air
+mechanism: NH3/H2/air (extended, ~30-60sp)
+mechanism_available: false
+dimensions: 1D/2D
+geometry: 1D-tube, 2D-channel
+solver_type: Euler
+amr_required: false
+figures_total: 0
+figures_done: 0
+figures: {}
+key_result: ''
+blockers: []
+notes: Non-uniform cracking profile. Extension of [16].

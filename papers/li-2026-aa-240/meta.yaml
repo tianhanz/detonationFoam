@@ -1,0 +1,33 @@
+status: NOT_STARTED
+tier: A
+wts_score: 24
+wts_breakdown:
+  D1: 2
+  D2: 3
+  D3: 1
+  D4: 3
+  D5: 3
+  D6: 1
+phase: null
+last_updated: '2026-03-30'
+ref_num: 21
+authors: Y. Li, et al.
+title: Unreacted pocket closure and jet flame formation in H2/O2 detonations with
+  transverse concentration gradients
+journal: Acta Astronautica
+volume: '240'
+year: 2026
+doi: ''
+fuel: H2/O2
+mechanism: Burke 2011 H2/O2 11sp/27rxn
+mechanism_available: true
+dimensions: 2D
+geometry: 2D-channel
+solver_type: Euler
+amr_required: true
+figures_total: 0
+figures_done: 0
+figures: {}
+key_result: ''
+blockers: []
+notes: Inhomogeneous initial field (concentration gradient). Standard H2/O2.

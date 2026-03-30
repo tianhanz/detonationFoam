@@ -1,0 +1,33 @@
+status: NOT_STARTED
+tier: B
+wts_score: 28
+wts_breakdown:
+  D1: 3
+  D2: 2
+  D3: 3
+  D4: 2
+  D5: 3
+  D6: 2
+phase: null
+last_updated: '2026-03-30'
+ref_num: 20
+authors: A. Dahake, et al.
+title: Investigating the effect of ozonolysis on the structure and dynamics of ethylene-oxygen-ozone
+  detonations
+journal: Combustion and Flame
+volume: '285'
+year: 2026
+doi: ''
+fuel: C2H4/O2/O3
+mechanism: Ethylene-ozone (~30-50sp)
+mechanism_available: false
+dimensions: 1D/2D
+geometry: 1D-tube, 2D-channel
+solver_type: Euler
+amr_required: false
+figures_total: 0
+figures_done: 0
+figures: {}
+key_result: ''
+blockers: []
+notes: Ozone chemistry needs sourcing. Unique C2H4/O3 mechanism.

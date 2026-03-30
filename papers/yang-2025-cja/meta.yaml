@@ -1,0 +1,32 @@
+status: NOT_STARTED
+tier: C
+wts_score: 32
+wts_breakdown:
+  D1: 3
+  D2: 4
+  D3: 1
+  D4: 3
+  D5: 3
+  D6: 3
+phase: null
+last_updated: '2026-03-30'
+ref_num: 12
+authors: Z. Yang, B. Zhang
+title: Typical onset modes of DDT and behavior of strong transverse shocks
+journal: Chinese Journal of Aeronautics
+volume: ''
+year: 2025
+doi: ''
+fuel: H2/O2
+mechanism: Burke 2011 H2/O2 11sp/27rxn
+mechanism_available: true
+dimensions: 2D
+geometry: 2D-channel (DDT, obstacles)
+solver_type: Euler
+amr_required: true
+figures_total: 0
+figures_done: 0
+figures: {}
+key_result: ''
+blockers: []
+notes: DDT is complex multi-regime physics. Needs obstacle geometry + AMR.

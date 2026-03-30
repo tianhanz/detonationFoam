@@ -1,0 +1,33 @@
+status: NOT_STARTED
+tier: C
+wts_score: 32
+wts_breakdown:
+  D1: 3
+  D2: 3
+  D3: 1
+  D4: 3
+  D5: 3
+  D6: 4
+phase: null
+last_updated: '2026-03-30'
+ref_num: 19
+authors: X. Yuan, T. Jin
+title: Dynamic response of the unstable oblique detonation wave in confined space
+  via different wedge rotation
+journal: Aerospace Science and Technology
+volume: '170'
+year: 2026
+doi: ''
+fuel: H2/air
+mechanism: Burke 2011 H2/O2 11sp/27rxn
+mechanism_available: true
+dimensions: 2D
+geometry: 2D-wedge (rotating, confined)
+solver_type: Euler
+amr_required: false
+figures_total: 0
+figures_done: 0
+figures: {}
+key_result: ''
+blockers: []
+notes: Rotating wedge in confined space. Moving mesh or parametric sweep.

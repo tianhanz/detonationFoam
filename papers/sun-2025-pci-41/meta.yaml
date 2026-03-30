@@ -1,0 +1,32 @@
+status: NOT_STARTED
+tier: B
+wts_score: 22
+wts_breakdown:
+  D1: 2
+  D2: 1
+  D3: 3
+  D4: 2
+  D5: 2
+  D6: 1
+phase: null
+last_updated: '2026-03-30'
+ref_num: 16
+authors: J. Sun, Z. Chen, et al.
+title: Detonation chemistry and propagation characteristics in partially cracked ammonia
+journal: Proceedings of the Combustion Institute
+volume: '41'
+year: 2025
+doi: ''
+fuel: cracked NH3/air
+mechanism: NH3/H2/air (extended, ~30-60sp)
+mechanism_available: false
+dimensions: 1D
+geometry: 1D-tube
+solver_type: Euler
+amr_required: false
+figures_total: 0
+figures_done: 0
+figures: {}
+key_result: ''
+blockers: []
+notes: 1D ammonia cracking detonation. Tutorial has 33sp NH3/O2 — may work.

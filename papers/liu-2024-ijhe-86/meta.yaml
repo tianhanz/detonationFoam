@@ -1,0 +1,33 @@
+status: NOT_STARTED
+tier: B
+wts_score: 28
+wts_breakdown:
+  D1: 2
+  D2: 3
+  D3: 3
+  D4: 3
+  D5: 2
+  D6: 2
+phase: null
+last_updated: '2026-03-30'
+ref_num: 6
+authors: Y. Liu, et al.
+title: Numerical simulations of wedge-induced oblique detonation waves in ammonia/hydrogen/air
+  mixtures
+journal: International Journal of Hydrogen Energy
+volume: '86'
+year: 2024
+doi: ''
+fuel: NH3/H2/air
+mechanism: NH3/H2/air (Stagni or Song, ~30-60sp)
+mechanism_available: false
+dimensions: 2D
+geometry: 2D-wedge
+solver_type: Euler
+amr_required: false
+figures_total: 0
+figures_done: 0
+figures: {}
+key_result: ''
+blockers: []
+notes: ODW with ammonia-hydrogen. Needs both mechanism + wedge mesh.

@@ -1,0 +1,32 @@
+status: NOT_STARTED
+tier: C
+wts_score: 40
+wts_breakdown:
+  D1: 3
+  D2: 5
+  D3: 1
+  D4: 5
+  D5: 4
+  D6: 3
+phase: null
+last_updated: '2026-03-30'
+ref_num: 24
+authors: C. Euteneuer, et al.
+title: Three-dimensional structures of H2/air oblique detonation waves
+journal: AIAA SCITECH 2026
+volume: ''
+year: 2026
+doi: ''
+fuel: H2/air
+mechanism: Burke 2011 H2/O2 11sp/27rxn
+mechanism_available: true
+dimensions: 3D
+geometry: 3D-wedge
+solver_type: Euler
+amr_required: false
+figures_total: 0
+figures_done: 0
+figures: {}
+key_result: ''
+blockers: []
+notes: Only 3D paper. Extreme compute cost. No 3D AMR bundled.

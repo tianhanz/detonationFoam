@@ -138,3 +138,10 @@ Create learning materials and reference documentation for the detonationFoam cod
 - **Root cause found for 1D failure**: decomposePar crashed because `method simple` with `n (8 1 1)` conflicts with `numberOfSubdomains 4`. The `simpleCoeffs` requires n₁×n₂×n₃ = numberOfSubdomains exactly.
 - **Fix**: `prepare_case()` now overwrites decomposeParDict entirely with `method scotch` (auto-partitions for any np). 2D case already used scotch so was unaffected.
 - **Second round submitted**: Jobs 22332934 (1D) and 22332935 (2D_AMR). 1D failed again with the decompose mismatch — fix not yet deployed. Resubmitting now with scotch override.
+
+### EARS — Progress (2026-03-30 14:52)
+- **Bohrium jobs confirmed running**: After scotch fix, 1D job (22333336) running at t=223ns, T_max=3660K, shock at 5.4mm. 2D AMR job (22332935) running at t=1.4μs, T_max=3660K, shock at 7.8mm. Both stable with Rosenbrock34, no FPE. Docker image `detonationfoam:0.2` verified working on Bohrium.
+- **Pushed scotch fix**: Committed and pushed `c566019` — force scotch method in decomposeParDict for any np value.
+- **Paper reproduction system designed**: User asked to learn from asurf project's paper reproduction system and design executable pathway for all 27 papers citing detonationFoam. Studied asurf's 5-phase workflow, meta.yaml schema, WTS rubric, figure tracking, and status.py scanner.
+- **Classification**: 27 papers → 4 tiers: A(5, stock solver+H2/O2), B(5, new mechanism needed), C(14, complex geometry), D(3, solver mods). Paper [2] (Sun 2023 CPC — the solver paper itself) is the sentinel case.
+- **Now building**: `papers/` infrastructure — README.md (master index), TOOL_REGISTRY.md, WTS_RUBRIC.md, tools/status.py, scripts/create_paper.py, then scaffolding all 27 paper directories with meta.yaml.

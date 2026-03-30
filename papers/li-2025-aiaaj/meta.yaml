@@ -1,0 +1,33 @@
+status: NOT_STARTED
+tier: D
+wts_score: 50
+wts_breakdown:
+  D1: 4
+  D2: 5
+  D3: 4
+  D4: 5
+  D5: 4
+  D6: 5
+phase: null
+last_updated: '2026-03-30'
+ref_num: 18
+authors: M. Li, et al.
+title: Ignition dynamics of a supersonic combustor with parallel dual combustion zones
+journal: AIAA Journal
+volume: ''
+year: 2025
+doi: ''
+fuel: hydrocarbon/air
+mechanism: unknown
+mechanism_available: false
+dimensions: 2D/3D
+geometry: scramjet dual-zone
+solver_type: NS_mixtureAverage
+amr_required: false
+figures_total: 0
+figures_done: 0
+figures: {}
+key_result: ''
+blockers: []
+notes: Scramjet combustor — likely needs turbulence model, injection, flameholding.
+  UNREPRODUCIBLE candidate.

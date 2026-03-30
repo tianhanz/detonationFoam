@@ -1,0 +1,33 @@
+status: NOT_STARTED
+tier: C
+wts_score: 30
+wts_breakdown:
+  D1: 2
+  D2: 3
+  D3: 1
+  D4: 3
+  D5: 3
+  D6: 4
+phase: null
+last_updated: '2026-03-30'
+ref_num: 23
+authors: D. Cao, et al.
+title: Detonation diffraction in expansion channels with rounded corner
+journal: Combustion and Flame
+volume: '283'
+year: 2026
+doi: ''
+fuel: H2/O2
+mechanism: Burke 2011 H2/O2 11sp/27rxn
+mechanism_available: true
+dimensions: 2D
+geometry: 2D-expansion (rounded corner)
+solver_type: Euler
+amr_required: true
+figures_total: 0
+figures_done: 0
+figures: {}
+key_result: ''
+blockers: []
+notes: Curved geometry at expansion corner. Needs snappyHexMesh or blockMesh with
+  arcs.

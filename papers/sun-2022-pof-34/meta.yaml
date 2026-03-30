@@ -1,0 +1,32 @@
+status: NOT_STARTED
+tier: C
+wts_score: 28
+wts_breakdown:
+  D1: 2
+  D2: 3
+  D3: 1
+  D4: 3
+  D5: 3
+  D6: 3
+phase: null
+last_updated: '2026-03-30'
+ref_num: 1
+authors: J. Sun, Z. Chen, et al.
+title: Effects of wedge-angle change on the evolution of oblique detonation wave structure
+journal: Physics of Fluids
+volume: '34'
+year: 2022
+doi: ''
+fuel: H2/air
+mechanism: Burke 2011 H2/O2 11sp/27rxn
+mechanism_available: true
+dimensions: 2D
+geometry: 2D-wedge (variable angle)
+solver_type: Euler
+amr_required: false
+figures_total: 0
+figures_done: 0
+figures: {}
+key_result: ''
+blockers: []
+notes: Time-varying wedge angle — may need mesh sequence or dynamic mesh.

@@ -1,0 +1,33 @@
+status: NOT_STARTED
+tier: D
+wts_score: 38
+wts_breakdown:
+  D1: 3
+  D2: 4
+  D3: 1
+  D4: 3
+  D5: 4
+  D6: 5
+phase: null
+last_updated: '2026-03-30'
+ref_num: 5
+authors: J. Hu, B. Zhang
+title: Time/frequency domain analysis of detonation wave propagation in a linear rotating
+  detonation combustor
+journal: Applied Thermal Engineering
+volume: '255'
+year: 2024
+doi: ''
+fuel: H2/air
+mechanism: Burke 2011 H2/O2 11sp/27rxn
+mechanism_available: true
+dimensions: 2D
+geometry: RDE (linear unwrapped)
+solver_type: Euler
+amr_required: false
+figures_total: 0
+figures_done: 0
+figures: {}
+key_result: ''
+blockers: []
+notes: RDE needs injection BCs, periodic azimuthal domain. Major setup work.
