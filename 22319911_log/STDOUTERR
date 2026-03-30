@@ -1,6 +1,0 @@
-=== detonationFoam Bohrium Job ===
-Date: Sat Mar 28 10:07:25 CST 2026
-Host: dp-lbg-1408-22319911
-Cores: 8
-MPI procs: 8
-=== Installing OpenFOAM 9 ===
