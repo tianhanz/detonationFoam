@@ -119,3 +119,9 @@ Create learning materials and reference documentation for the detonationFoam cod
 ### EARS — Progress (2026-03-30 00:34)
 - **Rosenbrock34 fix verified and committed** (commit `41f6a4d`): AMR test ran stably to t=1.39μs (vs seulex crash at 40ns). Applied to all 3 cases.
 - **Dockerfile rewritten**: Old version had wrong paths (`applications/libraries/` doesn't exist — all libs are under `applications/solvers/detonationFoam_V2.0/`). Fixed compilation order: (1) fluxSchemes_improved, (2) dynamicMesh2D/dynamicMesh → libdynamicMesh2D, (3) dynamicMesh2D/dynamicFvMesh → libdynamicFvMesh2D (depends on #2), (4) DLBFoam chemistryModel, (5) main solver. Also added COPY cases/ for test cases.
+- **git history cleaned**: Removed 1.1GB polyMesh blobs from history via `git filter-repo`, force pushed to origin.
+
+### EARS — Session End (2026-03-30 10:39)
+- Accomplished: (1) AMR mesh testing completed — dynamicRefineFvMesh2D verified with refinement/unrefinement in parallel; (2) Poinsot agent review identified seulex ODE as root cause of chemistry FPE; (3) Switched all cases to Rosenbrock34 — AMR test stable to 1.39μs; (4) Fixed Dockerfile with correct paths and compilation order; (5) Cleaned 1.1GB polyMesh from git history, force pushed.
+- Next session: (1) User is creating a new server node — needs to merge vk/8b8c-learn-code into main before deploying; (2) main branch is stale (upstream OF8 code only), all OF9 work is on vk/8b8c-learn-code; (3) After merge, user clones main and follows compile steps; (4) Bohrium job submission still pending — need Docker image address once user builds it.
+- Open issues: (1) DLBFoam loadBalanced method unusable (libODE_DLB.so missing); (2) Poinsot review noted resolution insufficient for ZND profile/cellular structure (need 3-4 AMR levels); (3) correctFluxes warnings for HLLC internal surfaceScalarFields (cosmetic, not functional).
