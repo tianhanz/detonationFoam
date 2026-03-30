@@ -30,9 +30,9 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template <class ReactionThermo, class ThermoType>
+template <class ThermoType>
 Foam::autoPtr<Foam::OFstream>
-Foam::LoadBalancedChemistryModel<ReactionThermo, ThermoType>::logFile(
+Foam::LoadBalancedChemistryModel<ThermoType>::logFile(
     const word& name) const
 {
     mkDir(this->mesh().time().path() / "loadBal" / this->group());

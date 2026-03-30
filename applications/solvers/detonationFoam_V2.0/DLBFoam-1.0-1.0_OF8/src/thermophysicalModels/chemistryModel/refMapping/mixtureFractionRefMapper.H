@@ -59,7 +59,7 @@ See also
 #include "Switch.H"
 #include "runTimeSelectionTables.H"
 #include "scalarField.H"
-#include "psiReactionThermo.H"
+#include "fluidReactionThermo.H"
 
 #include "mixtureFraction.H"
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

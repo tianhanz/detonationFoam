@@ -1,0 +1,10 @@
+# OpenFOAM build artifacts
+linux64GccDPInt32Opt/
+lnInclude/
+*.dep
+*.o
+
+# OpenFOAM runtime artifacts
+**/constant/polyMesh/
+processor[0-9]*/
+log.*

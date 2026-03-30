@@ -89,7 +89,7 @@ SourceFiles
 
 // Mixture fraction headers
 #include "atomicWeights.H"
-#include "psiReactionThermo.H"
+#include "fluidReactionThermo.H"
 
 namespace Foam
 {

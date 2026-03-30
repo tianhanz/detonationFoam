@@ -1,0 +1,50 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  9
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      setFieldsDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// 2D H2/O2 cellular detonation
+// Stoichiometric H2/O2 in N2 diluent
+// Hot spot with slight asymmetry to seed transverse instabilities
+
+defaultFieldValues
+(
+    volScalarFieldValue p 101325
+    volScalarFieldValue T 300
+);
+
+regions
+(
+    // Main detonation driver — hot gas at left boundary
+    boxToCell
+    {
+        box     (-1 -1 -1) (0.005 1 1);
+        fieldValues
+        (
+            volScalarFieldValue p 3039750
+            volScalarFieldValue T 2500
+        );
+    }
+    // Asymmetric perturbation — hotter region in lower half to seed cells
+    boxToCell
+    {
+        box     (-1 -1 -1) (0.003 0.01 1);
+        fieldValues
+        (
+            volScalarFieldValue p 3500000
+            volScalarFieldValue T 2800
+        );
+    }
+);
+
+// ************************************************************************* //

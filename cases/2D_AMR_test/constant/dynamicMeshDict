@@ -1,0 +1,65 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  9
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      dynamicMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dynamicFvMesh   dynamicRefineFvMesh2D;
+
+dynamicRefineFvMesh2DCoeffs
+{
+    // Refine every N timesteps
+    refineInterval      1;
+
+    // volScalarField for refinement criterion
+    // magGradrho = mag(fvc::grad(rho)) computed by the solver
+    field               magGradrho;
+
+    // Refine where lowerRefineLevel < magGradrho < upperRefineLevel
+    lowerRefineLevel    500;
+    upperRefineLevel    1e10;
+
+    // Unrefine where magGradrho < unrefineLevel
+    unrefineLevel       100;
+
+    // Maximum refinement levels (base=0, max splits)
+    maxRefinement       2;
+
+    // Maximum total cell count
+    maxCells            200000;
+
+    // Buffer layers for unrefinement protection
+    nBufferLayers       2;
+
+    // Buffer layers for refinement extension
+    nBufferLayersR      2;
+
+    // 2D axis: z-axis (index 2) is the empty direction
+    axis                2;
+    axisVal             0;
+
+    // Write cellLevel field for visualization
+    dumpLevel           true;
+
+    // Flux fields to correct after mesh changes
+    // For density-based solver: (fluxName none) since fluxes are recomputed
+    correctFluxes
+    (
+        (phi none)
+        (rhoPhi none)
+        (rhoUPhi none)
+        (rhoEPhi none)
+    );
+}
+
+// ************************************************************************* //

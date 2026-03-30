@@ -8,10 +8,10 @@ thermo.validate(args.executable(), "h", "e");
 basicSpecieMixture& composition = thermo.composition();
 PtrList<volScalarField>& Y = composition.Y();
 
-const word inertSpecie(thermo.lookup("inertSpecie"));
+const word inertSpecie(thermo.properties().lookup("inertSpecie"));
 if (!composition.species().found(inertSpecie))
 {
-    FatalIOErrorIn(args.executable().c_str(), thermo)
+    FatalIOErrorInFunction(thermo.properties())
         << "Inert specie " << inertSpecie << " not found in available species "
         << composition.species() << exit(FatalIOError);
 }
@@ -235,15 +235,15 @@ autoPtr<compressible::momentumTransportModel> turbulence
 );
 
 Info<< "Creating thermophysical transport model\n" << endl;
-autoPtr<psiReactionThermophysicalTransportModel> thermophysicalTransport
+autoPtr<fluidReactionThermophysicalTransportModel> thermophysicalTransport
 (
-    psiReactionThermophysicalTransportModel::New(turbulence(), thermo)
+    fluidReactionThermophysicalTransportModel::New(turbulence(), thermo)
 );
 
 Info<< "Creating reaction model\n" << endl;
-autoPtr<CombustionModel<psiReactionThermo>> reaction
+autoPtr<combustionModel> reaction
 (
-    CombustionModel<psiReactionThermo>::New(thermo, turbulence())
+    combustionModel::New(thermo, turbulence())
 );
 
 multivariateSurfaceInterpolationScheme<scalar>::fieldTable fields;

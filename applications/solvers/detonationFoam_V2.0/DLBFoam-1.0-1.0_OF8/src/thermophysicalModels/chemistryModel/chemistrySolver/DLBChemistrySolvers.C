@@ -1,8 +1,8 @@
 /*---------------------------------------------------------------------------*\
   =========                 |
-  \\      /  F ield         | DLBFoam: Dynamic Load Balancing 
+  \\      /  F ield         | DLBFoam: Dynamic Load Balancing
    \\    /   O peration     | for fast reactive simulations
-    \\  /    A nd           | 
+    \\  /    A nd           |
      \\/     M anipulation  | 2020, Aalto University, Finland
 -------------------------------------------------------------------------------
 License
@@ -20,7 +20,7 @@ License
     for more details.
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
-    
+
 \*---------------------------------------------------------------------------*/
 
 #include "noChemistrySolver.H"
@@ -28,65 +28,45 @@ License
 #include "ode.H"
 #include "LoadBalancedChemistryModel.H"
 
-#include "psiReactionThermo.H"
-#include "rhoReactionThermo.H"
-
-#include "forCommonGases.H"
-#include "forCommonLiquids.H"
-#include "forPolynomials.H"
+#include "forGases.H"
+#include "forLiquids.H"
 #include "makeChemistrySolver.H"
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define defineChemistrySolvers(ReactionThermo, ThermoPhysics)                  \
+#define defineChemistrySolvers(nullArg, ThermoPhysics)                         \
     defineChemistrySolver                                                      \
     (                                                                          \
         LoadBalancedChemistryModel,                                            \
-        ReactionThermo,                                                        \
         ThermoPhysics                                                          \
-    );                                                                         \
+    );
 
-#define makeChemistrySolvers(Solver, ReactionThermo, ThermoPhysics)            \
+#define makeChemistrySolvers(Solver, ThermoPhysics)                            \
     makeChemistrySolver                                                        \
     (                                                                          \
         Solver,                                                                \
         LoadBalancedChemistryModel,                                            \
-        ReactionThermo,                                                        \
         ThermoPhysics                                                          \
-    );                                                                         \
+    );
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    //using standard ode
+    // gases
+    forCoeffGases(defineChemistrySolvers, nullArg);
 
-    //gasses
-    forCommonGases(defineChemistrySolvers, psiReactionThermo);
-    forCommonGases(defineChemistrySolvers, rhoReactionThermo);
+    forCoeffGases(makeChemistrySolvers, noChemistrySolver);
+    forCoeffGases(makeChemistrySolvers, EulerImplicit);
+    forCoeffGases(makeChemistrySolvers, ode);
 
-    forCommonGases(makeChemistrySolvers, noChemistrySolver, psiReactionThermo);
-    forCommonGases(makeChemistrySolvers, noChemistrySolver, rhoReactionThermo);
-    forCommonGases(makeChemistrySolvers, EulerImplicit, psiReactionThermo);
-    forCommonGases(makeChemistrySolvers, EulerImplicit, rhoReactionThermo);
-    forCommonGases(makeChemistrySolvers, ode, psiReactionThermo);
-    forCommonGases(makeChemistrySolvers, ode, rhoReactionThermo);
+    // liquids
+    forCoeffLiquids(defineChemistrySolvers, nullArg);
 
-
-    //liquids
-    forCommonLiquids(defineChemistrySolvers, rhoReactionThermo);
-
-    forCommonLiquids(makeChemistrySolvers, noChemistrySolver, rhoReactionThermo);
-    forCommonLiquids(makeChemistrySolvers, EulerImplicit, rhoReactionThermo);
-    forCommonLiquids(makeChemistrySolvers, ode, rhoReactionThermo);
-
-    //polynomials
-    forPolynomials(defineChemistrySolvers, rhoReactionThermo);
-
-    forPolynomials(makeChemistrySolvers, noChemistrySolver, rhoReactionThermo);
-    forPolynomials(makeChemistrySolvers, EulerImplicit, rhoReactionThermo);
-    forPolynomials(makeChemistrySolvers, ode, rhoReactionThermo);
+    forCoeffLiquids(makeChemistrySolvers, noChemistrySolver);
+    forCoeffLiquids(makeChemistrySolvers, EulerImplicit);
+    forCoeffLiquids(makeChemistrySolvers, ode);
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
