@@ -8,3 +8,4 @@ lnInclude/
 **/constant/polyMesh/
 processor[0-9]*/
 log.*
+__pycache__/
