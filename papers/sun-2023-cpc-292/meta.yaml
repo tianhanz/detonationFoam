@@ -33,7 +33,7 @@ figures:
   fig5: {status: done, note: "1D CJ velocity: V=1978.9 m/s (0.56% err vs 1968 literature)"}
   fig6: {status: pending, note: "2D cellular detonation pressure contour — need full 2D cellular run"}
   fig7: {status: pending, note: "2D cellular soot foil — need full 2D cellular run"}
-  fig8: {status: pending, note: "Grid convergence study"}
+  fig8: {status: running, note: "Grid convergence: 5 jobs submitted (dx=40,20,10,5μm uniform + AMR base40 L2)"}
   fig9: {status: pending, note: "Computational performance"}
   fig10: {status: pending, note: "Species profiles"}
 key_result: "V_CJ=1978.9 m/s measured from 1D simulation (0.56% error vs literature 1968 m/s)"
@@ -47,6 +47,11 @@ compute:
        result: "t=4.31μs, shock at 13.5mm, V_CJ=1978.9 m/s"}
     - {job_id: 22332935, case: 2D_AMR_test, machine: c4_m8_cpu, status: finished,
        result: "t=4.48μs, AMR stable, cosmetic flux warnings only"}
+    - {job_id: 22340991, case: convergence-uniform_dx40, machine: c4_m8_cpu, status: submitted}
+    - {job_id: 22340969, case: convergence-uniform_dx20, machine: c4_m8_cpu, status: submitted}
+    - {job_id: 22340971, case: convergence-uniform_dx10, machine: c4_m8_cpu, status: submitted}
+    - {job_id: 22340974, case: convergence-uniform_dx05, machine: c4_m8_cpu, status: submitted}
+    - {job_id: 22340977, case: convergence-amr_base40_L2, machine: c4_m8_cpu, status: submitted}
   independent_reference:
     V_CJ_ms: 1976.32
     T_CJ_K: 2964.7

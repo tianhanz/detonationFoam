@@ -45,3 +45,23 @@
   - **Verdict: PASS**
 - 2D AMR test showed stable AMR operation with Rosenbrock34, no FPE
 - Remaining: 1D needs longer run for full profile; 2D cellular (5M cells) needs c32 machine
+
+### EARS — Progress (2026-03-31 11:33)
+- Paper PDF inaccessible (web blocked) — extracted all numerical setup from existing case files instead
+- Designing grid convergence study (Fig 8): 5 cases in 1D geometry (5cm domain, 10μs endTime)
+  - 4 uniform: dx = 40, 20, 10, 5 μm (1250 to 10000 cells)
+  - 1 AMR: base 40μm + 2 levels → effective 10μm (compare against uniform_dx10)
+- Writing gen_convergence_cases.py to scaffold all 5 cases automatically
+- Will compare: CJ velocity, peak pressure, ZND induction length, p/T profiles
+- Decision: Use 1D (not 2D) for convergence — isolates numerical error from multidimensional effects, much cheaper
+
+### Grid convergence jobs submitted (2026-03-31 11:39)
+- 5 cases created in `case/` directory via `scripts/gen_convergence_cases.py`:
+  - uniform_dx40: 1250 cells, dx=40μm, max_time=60min → Job 22340991
+  - uniform_dx20: 2500 cells, dx=20μm, max_time=120min → Job 22340969
+  - uniform_dx10: 5000 cells, dx=10μm, max_time=240min → Job 22340971
+  - uniform_dx05: 10000 cells, dx=5μm, max_time=360min → Job 22340974
+  - amr_base40_L2: 1250 base cells + 2 AMR levels (eff 10μm), max_time=240min → Job 22340977
+- All on c4_m8_cpu, np=4, domain=5cm, endTime=10μs, writeInterval=0.5μs
+- Post-processing: `scripts/analyze_convergence.py` — extracts V_CJ, peak P, induction length, Richardson extrapolation, AMR vs uniform comparison
+- Next: check job results, run analyze_convergence.py, generate convergence plots
