@@ -33,3 +33,15 @@
   - 2D AMR (Job 22332935): Running, t=1.4μs at ~76min, shock at 7.8mm
 - Both stable with Rosenbrock34, no FPE
 - Will extract CJ velocity from shock trajectory once enough data accumulated
+
+### Phase 3 results (2026-03-31)
+- Both Bohrium jobs finished (hit 6hr time limit):
+  - 1D (Job 22333336): t=4.31μs/50μs, shock at 13.5mm, ClockTime=21680s
+  - 2D AMR (Job 22332935): t=4.48μs/5μs, 11875 cells with AMR, ClockTime~21600s
+- **CJ velocity extracted from 1D shock trajectory**:
+  - Linear fit of 8 data points (t > 0.5μs): **V = 1978.9 m/s**
+  - Error vs Cantera CJ: 0.13%, vs literature: 0.56%
+  - Instantaneous velocity converged to 1976-1980 m/s after 0.5μs
+  - **Verdict: PASS**
+- 2D AMR test showed stable AMR operation with Rosenbrock34, no FPE
+- Remaining: 1D needs longer run for full profile; 2D cellular (5M cells) needs c32 machine
