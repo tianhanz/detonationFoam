@@ -57,11 +57,16 @@
 
 ### Grid convergence jobs submitted (2026-03-31 11:39)
 - 5 cases created in `case/` directory via `scripts/gen_convergence_cases.py`:
-  - uniform_dx40: 1250 cells, dx=40μm, max_time=60min → Job 22340991
-  - uniform_dx20: 2500 cells, dx=20μm, max_time=120min → Job 22340969
-  - uniform_dx10: 5000 cells, dx=10μm, max_time=240min → Job 22340971
-  - uniform_dx05: 10000 cells, dx=5μm, max_time=360min → Job 22340974
-  - amr_base40_L2: 1250 base cells + 2 AMR levels (eff 10μm), max_time=240min → Job 22340977
+  - uniform_dx40: 1250 cells, dx=40μm, max_time=60min → ~~Job 22340991~~ failed
+  - uniform_dx20: 2500 cells, dx=20μm, max_time=120min → ~~Job 22340969~~ failed
+  - uniform_dx10: 5000 cells, dx=10μm, max_time=240min → ~~Job 22340971~~ failed
+  - uniform_dx05: 10000 cells, dx=5μm, max_time=360min → ~~Job 22340974~~ failed
+  - amr_base40_L2: 1250 base cells + 2 AMR levels (eff 10μm), max_time=240min → ~~Job 22340977~~ failed
+- **Root cause**: chemistryProperties missing `#include "$FOAM_CASE/constant/foam/reactions.foam"` — solver couldn't find reactions dict
+- **Fix**: Added `#include` to gen_convergence_cases.py, regenerated all cases
+
+### Grid convergence resubmitted (2026-04-01 09:39)
+- New job IDs: 22347161, 22347162, 22347163, 22347164, 22347165
 - All on c4_m8_cpu, np=4, domain=5cm, endTime=10μs, writeInterval=0.5μs
 - Post-processing: `scripts/analyze_convergence.py` — extracts V_CJ, peak P, induction length, Richardson extrapolation, AMR vs uniform comparison
 - Next: check job results, run analyze_convergence.py, generate convergence plots

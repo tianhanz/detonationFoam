@@ -341,6 +341,8 @@ odeCoeffs
     relTol          1e-6;
 }
 
+#include "$FOAM_CASE/constant/foam/reactions.foam"
+
 // ************************************************************************* //
 """
     )
