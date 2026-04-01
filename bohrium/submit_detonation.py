@@ -240,7 +240,7 @@ export OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
 mpirun -np {np} --oversubscribe detonationFoam_V2.0 -parallel 2>&1
 
 echo "=== Reconstructing ==="
-reconstructPar 2>&1
+{'reconstructParMesh -allTimes 2>&1 && reconstructPar 2>&1' if is_amr else 'reconstructPar 2>&1'}
 
 echo "=== Job complete ==="
 echo "Date: $(date)"

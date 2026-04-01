@@ -95,27 +95,32 @@ def read_scalar_field(field_path):
 
 
 def get_cell_centers_x(case_path, time_dir):
-    """Get cell center x-coordinates from blockMeshDict for 1D cases."""
-    # For these 1D convergence cases, compute directly from blockMeshDict
+    """Get cell center x-coordinates.
+
+    For AMR cases: reads the Cx field (written by writeCellCentres postProcess).
+    For uniform cases: computes from blockMeshDict.
+    """
+    # Try Cx field first (works for AMR with varying cell count)
+    cx_file = time_dir / "Cx"
+    if cx_file.exists():
+        return read_scalar_field(cx_file)
+
+    # Uniform case: compute from blockMeshDict
     bmdict = case_path / "system" / "blockMeshDict"
     with open(bmdict) as f:
         content = f.read()
 
-    # Extract cell count from hex block: hex (...) (Nx Ny Nz)
     hex_match = re.search(r"hex\s+\([^)]+\)\s+\((\d+)\s+\d+\s+\d+\)", content)
     if not hex_match:
         return None
 
     ncells = int(hex_match.group(1))
 
-    # Extract vertices section — find 8 vertex coordinates between "vertices" and "blocks"
     vert_section = re.search(r"vertices\s*\((.*?)\)\s*;\s*\n", content, re.DOTALL)
     if not vert_section:
-        # Fallback: use known domain length
-        dx = DOMAIN_LENGTH / ncells if 'DOMAIN_LENGTH' in dir() else 0.05 / ncells
+        dx = 0.05 / ncells
         return np.linspace(dx / 2, 0.05 - dx / 2, ncells)
 
-    # Parse vertex x-coordinates from the vertices block
     verts_text = vert_section.group(1)
     x_vals = []
     for m in re.finditer(r"\(\s*([0-9.e+-]+)\s+[0-9.e+-]+\s+[0-9.e+-]+\s*\)", verts_text):
@@ -127,7 +132,6 @@ def get_cell_centers_x(case_path, time_dir):
         dx = (x_max - x_min) / ncells
         return np.linspace(x_min + dx / 2, x_max - dx / 2, ncells)
 
-    # Last resort
     dx = 0.05 / ncells
     return np.linspace(dx / 2, 0.05 - dx / 2, ncells)
 
@@ -206,6 +210,11 @@ def analyze_case(case_name, profile_time=None):
             # For AMR, cell count changes — skip if mismatch
             continue
 
+        # Sort by x (AMR cells may be in arbitrary order)
+        sort_idx = np.argsort(x)
+        x = x[sort_idx]
+        p = p[sort_idx]
+
         shock_x, p_max = find_shock_position(x, p)
         shock_data.append({"t": t, "shock_x": shock_x, "p_max": p_max})
 
@@ -213,7 +222,8 @@ def analyze_case(case_name, profile_time=None):
         if profile_time is not None and T_file.exists():
             if abs(t - profile_time) < 0.3e-6:  # within 0.3 μs
                 T = read_scalar_field(T_file)
-                if len(T) == len(x):
+                if len(T) == len(sort_idx):
+                    T = T[sort_idx]  # apply same sort as x/p
                     induction = compute_induction_length(x, T, shock_x)
                     profile_data = {
                         "t": t,

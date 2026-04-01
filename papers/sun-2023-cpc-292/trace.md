@@ -86,3 +86,23 @@
 - Downloaded and extracted results for dx40/dx20/dx10 into case directories
 - Running analyze_convergence.py — hit parser bug: `read_scalar_field` matched "nonuniform" as "uniform". Fixed.
 - AMR reconstruction failed (pointProcAddressing mismatch with refined mesh) — will need per-processor analysis or merging approach
+
+### AMR debugging and final convergence results (2026-04-01 14:30)
+- **AMR reconstruction fix**: `reconstructParMesh` first creates addressing files, then `reconstructPar` works
+- **AMR analysis fix**: cells not sorted by x after reconstruction → added `np.argsort(x)` sort step
+- **AMR Cx fields**: generated via `postProcess -func writeCellCentres` for each time step
+- Updated `submit_detonation.py` run.sh: AMR cases now use `reconstructParMesh -allTimes && reconstructPar`
+
+**Final convergence results (3 uniform + AMR, dx05 still running)**:
+
+| Case | dx(μm) | V_CJ (m/s) | err vs CJ | P_max (atm) |
+|------|--------|------------|-----------|-------------|
+| uniform_dx40 | 40 | 1980.4 | 0.20% | 22.38 |
+| uniform_dx20 | 20 | 1978.9 | 0.13% | 22.36 |
+| uniform_dx10 | 10 | 1979.7 | 0.17% | 22.34 |
+| amr_base40_L2 | 10 eff | 1980.0 | 0.19% | 39.12 |
+
+- **AMR vs Uniform comparison** (same effective dx=10μm): V_CJ difference = 0.3 m/s (0.016%) — **AMR validated**
+- Richardson extrapolation: V_CJ = 1980.7 m/s, order p = 0.87
+- AMR P_max higher (39 vs 22 atm) because AMR resolves the von Neumann spike better
+- Convergence plots saved to `figures/`
