@@ -75,3 +75,14 @@
 - Job IDs: 22347187 (dx40), 22347191 (dx20), 22347188 (dx10), 22347194 (dx05), 22347189 (AMR)
 - All preflight-validated locally before submission
 - Next: check job results, run analyze_convergence.py, generate convergence plots
+
+### EARS — Progress (2026-04-01 14:20)
+- 4/5 convergence jobs finished (exit 0), dx05 still running:
+  - dx40: 21 timesteps, t=0→10μs, 1435s walltime — COMPLETE
+  - dx20: 21 timesteps, t=0→10μs, 4598s — COMPLETE
+  - dx10: 21 timesteps, t=0→10μs, 12167s — COMPLETE
+  - dx05: still running (~15000s so far)
+  - AMR: ran to t≈5μs (hit time limit at 14527s), no reconstructPar (AMR mesh incompatible with standard reconstruct)
+- Downloaded and extracted results for dx40/dx20/dx10 into case directories
+- Running analyze_convergence.py — hit parser bug: `read_scalar_field` matched "nonuniform" as "uniform". Fixed.
+- AMR reconstruction failed (pointProcAddressing mismatch with refined mesh) — will need per-processor analysis or merging approach

@@ -68,7 +68,7 @@ def read_scalar_field(field_path):
     for i, line in enumerate(lines):
         line = line.strip()
         if line.startswith("internalField"):
-            if "uniform" in line:
+            if "uniform" in line and "nonuniform" not in line:
                 # Uniform field — extract value
                 val = float(line.split("uniform")[1].strip().rstrip(";"))
                 return np.array([val])
@@ -95,49 +95,41 @@ def read_scalar_field(field_path):
 
 
 def get_cell_centers_x(case_path, time_dir):
-    """Get cell center x-coordinates. Uses first time dir's C field or computes from mesh."""
-    # Try to read cellCentres if available
-    cc_path = time_dir / "C"
-    if cc_path.exists():
-        with open(cc_path) as f:
-            lines = f.readlines()
-        # Parse vector field
-        in_field = False
-        values = []
-        for line in lines:
-            line = line.strip()
-            if line.startswith("internalField"):
-                in_field = True
-                continue
-            if in_field and line == "(":
-                continue
-            if in_field and line == ")":
-                break
-            if in_field and line.startswith("("):
-                parts = line.strip("()").split()
-                if len(parts) >= 1:
-                    values.append(float(parts[0]))
-        if values:
-            return np.array(values)
-
-    # Fallback: compute from blockMeshDict
+    """Get cell center x-coordinates from blockMeshDict for 1D cases."""
+    # For these 1D convergence cases, compute directly from blockMeshDict
     bmdict = case_path / "system" / "blockMeshDict"
     with open(bmdict) as f:
         content = f.read()
 
-    # Extract domain length and cell count from hex block
+    # Extract cell count from hex block: hex (...) (Nx Ny Nz)
     hex_match = re.search(r"hex\s+\([^)]+\)\s+\((\d+)\s+\d+\s+\d+\)", content)
-    vert_match = re.findall(r"\(([0-9.e+-]+)\s+[0-9.e+-]+\s+[0-9.e+-]+\)", content)
+    if not hex_match:
+        return None
 
-    if hex_match and vert_match:
-        ncells = int(hex_match.group(1))
-        x_coords = [float(v) for v in [m for m in [re.match(r"([0-9.e+-]+)", v).group(1) for v in vert_match]]]
-        x_min = min(x_coords)
-        x_max = max(x_coords)
+    ncells = int(hex_match.group(1))
+
+    # Extract vertices section — find 8 vertex coordinates between "vertices" and "blocks"
+    vert_section = re.search(r"vertices\s*\((.*?)\)\s*;\s*\n", content, re.DOTALL)
+    if not vert_section:
+        # Fallback: use known domain length
+        dx = DOMAIN_LENGTH / ncells if 'DOMAIN_LENGTH' in dir() else 0.05 / ncells
+        return np.linspace(dx / 2, 0.05 - dx / 2, ncells)
+
+    # Parse vertex x-coordinates from the vertices block
+    verts_text = vert_section.group(1)
+    x_vals = []
+    for m in re.finditer(r"\(\s*([0-9.e+-]+)\s+[0-9.e+-]+\s+[0-9.e+-]+\s*\)", verts_text):
+        x_vals.append(float(m.group(1)))
+
+    if x_vals:
+        x_min = min(x_vals)
+        x_max = max(x_vals)
         dx = (x_max - x_min) / ncells
         return np.linspace(x_min + dx / 2, x_max - dx / 2, ncells)
 
-    return None
+    # Last resort
+    dx = 0.05 / ncells
+    return np.linspace(dx / 2, 0.05 - dx / 2, ncells)
 
 
 def find_shock_position(x, p, threshold_factor=3.0):
@@ -296,9 +288,10 @@ def print_summary(results, cj_ref):
     print("-" * 80)
 
     for r in results:
-        if r is None or "error" in r:
-            name = r["case"] if r else "?"
-            print(f"  {name}: {r.get('error', 'no data')}")
+        if r is None:
+            continue
+        if "error" in r:
+            print(f"  {r['case']}: {r.get('error', 'no data')}")
             continue
 
         dx_um = f"{r['dx']*1e6:.0f}"

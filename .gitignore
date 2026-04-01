@@ -9,3 +9,8 @@ lnInclude/
 processor[0-9]*/
 log.*
 __pycache__/
+
+# OpenFOAM simulation output time directories (large, reproducible)
+papers/*/case/*/[0-9]*
+papers/*/case/*/constant/polyMesh/
+!papers/*/case/*/0/
