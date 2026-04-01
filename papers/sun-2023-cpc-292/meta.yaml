@@ -49,11 +49,13 @@ compute:
        result: "t=4.48μs, AMR stable, cosmetic flux warnings only"}
     - {job_id: 22340991, case: convergence-uniform_dx40, machine: c4_m8_cpu, status: failed,
        result: "missing reactions #include in chemistryProperties"}
-    - {job_id: 22347161, case: convergence-uniform_dx40, machine: c4_m8_cpu, status: submitted}
-    - {job_id: 22347162, case: convergence-uniform_dx20, machine: c4_m8_cpu, status: submitted}
-    - {job_id: 22347163, case: convergence-uniform_dx10, machine: c4_m8_cpu, status: submitted}
-    - {job_id: 22347164, case: convergence-uniform_dx05, machine: c4_m8_cpu, status: submitted}
-    - {job_id: 22347165, case: convergence-amr_base40_L2, machine: c4_m8_cpu, status: submitted}
+    - {job_id: 22347161, case: convergence-uniform_dx40, machine: c4_m8_cpu, status: failed,
+       result: "missing rho solver in fvSolution"}
+    - {job_id: 22347187, case: convergence-uniform_dx40, machine: c4_m8_cpu, status: submitted}
+    - {job_id: 22347191, case: convergence-uniform_dx20, machine: c4_m8_cpu, status: submitted}
+    - {job_id: 22347188, case: convergence-uniform_dx10, machine: c4_m8_cpu, status: submitted}
+    - {job_id: 22347194, case: convergence-uniform_dx05, machine: c4_m8_cpu, status: submitted}
+    - {job_id: 22347189, case: convergence-amr_base40_L2, machine: c4_m8_cpu, status: submitted}
   independent_reference:
     V_CJ_ms: 1976.32
     T_CJ_K: 2964.7

@@ -17,6 +17,7 @@ sys.path.insert(0, str(PROJ_ROOT / "bohrium"))
 
 from submit_detonation import (
     _load_bohrium_env,
+    preflight_check,
     prepare_case,
     submit_job,
     poll_jobs,
@@ -43,6 +44,8 @@ def main():
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--case", type=str, help="Submit only this case")
     parser.add_argument("--poll", action="store_true", help="Poll until all jobs finish")
+    parser.add_argument("--no-preflight", action="store_true",
+                        help="Skip local preflight check")
     args = parser.parse_args()
 
     env = _load_bohrium_env()
@@ -59,6 +62,13 @@ def main():
 
     import tempfile
     tmp_base = Path(tempfile.mkdtemp(prefix="bohrium_convergence_"))
+
+    # Preflight: test the cheapest case locally before submitting any
+    if not args.dry_run and not args.no_preflight:
+        first_case = CASE_DIR / list(cases_to_run.keys())[0]
+        if first_case.exists() and not preflight_check(first_case):
+            print("Aborting batch. Fix errors above or use --no-preflight to skip.")
+            sys.exit(1)
 
     job_ids = []
     for name, cfg in cases_to_run.items():

@@ -66,7 +66,12 @@
 - **Fix**: Added `#include` to gen_convergence_cases.py, regenerated all cases
 
 ### Grid convergence resubmitted (2026-04-01 09:39)
-- New job IDs: 22347161, 22347162, 22347163, 22347164, 22347165
-- All on c4_m8_cpu, np=4, domain=5cm, endTime=10μs, writeInterval=0.5μs
-- Post-processing: `scripts/analyze_convergence.py` — extracts V_CJ, peak P, induction length, Richardson extrapolation, AMR vs uniform comparison
+- Jobs 22347161–65 failed again: fvSolution had empty `solvers {}` — solver needs `rho` diagonal solver entry
+- **Fix**: Added full fvSolution solvers block (rho/rhoU/rhoE diagonal, U/e PBiCGStab, Yi PBiCGStab)
+- **Added preflight check** to `submit_detonation.py`: runs blockMesh + setFields + 2 solver steps locally before any Bohrium submission — would have caught both bugs instantly
+- Regenerated cases, preflight PASSED for both uniform and AMR
+
+### Grid convergence final submission (2026-04-01 10:01)
+- Job IDs: 22347187 (dx40), 22347191 (dx20), 22347188 (dx10), 22347194 (dx05), 22347189 (AMR)
+- All preflight-validated locally before submission
 - Next: check job results, run analyze_convergence.py, generate convergence plots

@@ -67,6 +67,71 @@ def _bohr_run(args_str: str) -> subprocess.CompletedProcess:
     )
 
 
+def preflight_check(case_dir: Path) -> bool:
+    """Run blockMesh + setFields + 2 solver timesteps locally (serial) to catch config errors.
+
+    Returns True if the solver starts successfully, False otherwise.
+    Uses a temporary copy so the original case stays clean.
+    """
+    import shutil as _shutil
+
+    print("\n=== Preflight check (local serial, 2 timesteps) ===")
+
+    # Check OF9 environment
+    of_bashrc = Path("/opt/openfoam9/etc/bashrc")
+    if not of_bashrc.exists():
+        print("  SKIP: OpenFOAM 9 not installed locally — cannot preflight")
+        return True  # don't block submission if OF not available
+
+    tmp = Path(tempfile.mkdtemp(prefix="preflight_"))
+    work = tmp / case_dir.name
+    _shutil.copytree(
+        case_dir, work,
+        ignore=_shutil.ignore_patterns("processor*", "log.*", "constant/polyMesh"),
+    )
+
+    # Patch controlDict: endTime = 2 * deltaT, no writes
+    ctrl = work / "system" / "controlDict"
+    if ctrl.exists():
+        text = ctrl.read_text()
+        # Replace endTime with a tiny value (2e-11 = 2 steps at dt=1e-11)
+        text = re.sub(r'endTime\s+[^;]+;', 'endTime         2e-11;', text)
+        text = re.sub(r'writeInterval\s+[^;]+;', 'writeInterval   1;', text)
+        ctrl.write_text(text)
+
+    shell_prefix = f"source /opt/openfoam9/etc/bashrc && cd {work} && "
+    ok = True
+
+    for step, cmd in [
+        ("blockMesh", "blockMesh"),
+        ("setFields", "setFields"),
+        ("solver (2 steps)", "detonationFoam_V2.0"),
+    ]:
+        print(f"  {step}...", end=" ", flush=True)
+        r = subprocess.run(
+            ["bash", "-c", shell_prefix + cmd],
+            capture_output=True, text=True, timeout=120,
+        )
+        if r.returncode != 0:
+            print("FAIL")
+            # Show last 15 lines of stderr/stdout for diagnosis
+            output = (r.stdout + r.stderr).strip().splitlines()
+            for line in output[-15:]:
+                print(f"    {line}")
+            ok = False
+            break
+        else:
+            print("ok")
+
+    _shutil.rmtree(tmp, ignore_errors=True)
+
+    if ok:
+        print("  Preflight PASSED — safe to submit\n")
+    else:
+        print("  Preflight FAILED — fix the case before submitting\n")
+    return ok
+
+
 def prepare_case(case_dir: Path, np: int, tmp_base: Path, is_amr: bool) -> Path:
     """Prepare input directory for Bohrium. No solver source needed — image is pre-compiled."""
     input_dir = tmp_base / case_dir.name
@@ -277,6 +342,8 @@ def main():
     parser.add_argument("--disk", type=int, default=DEFAULT_DISK_SIZE)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--poll", action="store_true")
+    parser.add_argument("--no-preflight", action="store_true",
+                        help="Skip local preflight check")
     args = parser.parse_args()
 
     if args.project_id == 0:
@@ -304,6 +371,12 @@ def main():
     if args.dry_run:
         print(f"\n[DRY RUN] Would submit {case_name}. No job created.")
         return
+
+    # Preflight: run blockMesh + setFields + 2 solver steps locally
+    if not args.no_preflight:
+        if not preflight_check(case_dir):
+            print("Aborting submission. Fix errors above or use --no-preflight to skip.")
+            sys.exit(1)
 
     tmp_base = Path(tempfile.mkdtemp(prefix=f"bohrium_{case_name}_"))
     print(f"Staging to : {tmp_base}")

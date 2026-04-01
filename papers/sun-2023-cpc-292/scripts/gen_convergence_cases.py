@@ -241,7 +241,40 @@ snGradSchemes
     (cdir / "system" / "fvSolution").write_text(
         write_header("fvSolution")
         + """\
-solvers {}
+solvers
+{
+    "(rho|rhoU|rhoE)"
+    {
+        solver          diagonal;
+    }
+    "(rho|rhoU|rhoE)Final"
+    {
+        solver          diagonal;
+    }
+    "(U|e)"
+    {
+        solver          PBiCGStab;
+        preconditioner  DIC;
+        tolerance       1e-12;
+        relTol          0.1;
+    }
+    "(U|e)Final"
+    {
+        $U;
+        relTol          0;
+    }
+    "(Yi)"
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       1e-12;
+        relTol          0;
+    }
+}
+
+CENTRAL
+{
+}
 
 // ************************************************************************* //
 """
